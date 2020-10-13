@@ -7,7 +7,7 @@ const RootNavigator = () => {
   //   const isLoggedIn = useSelector(
   //     (state: any) => state.auth.isLoggedIn
   //   );
-  const isLoggedIn = true;
+  const isLoggedIn = false;
   return <>{isLoggedIn ? <TabNavigator /> : <AuthNavigator />}</>;
 };
 

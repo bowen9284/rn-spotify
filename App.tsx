@@ -21,7 +21,7 @@ export default function App() {
 }
 
 const SpotifyTheme = {
-  ...DefaultTheme,
+  ...DefaultTheme, 
   dark: false,
   colors: {
     ...DefaultTheme.colors,

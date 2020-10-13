@@ -1,9 +1,9 @@
 import { useTheme } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 
-const LandingScreen = () => {
+const LandingScreen = ({ navigation }) => {
   const { colors } = useTheme();
 
   return (
@@ -33,7 +33,11 @@ const LandingScreen = () => {
           image={require('../../assets/facebook_icon_blue.png')}
           onPress={() => {}}
         />
-        <Text style={{ color: colors.text, ...styles.logInText }}>Log in</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+          <Text style={{ color: colors.text, ...styles.logInText }}>
+            Log in
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

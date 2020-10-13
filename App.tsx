@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {
@@ -6,16 +5,16 @@ import {
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
-import TabNavigator from './components/navigation/TabNavigator';
 import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
+import RootNavigator from './components/navigation/RootNavigator';
 
 export default function App() {
   const scheme = useColorScheme();
 
   return (
     <AppearanceProvider>
-      <NavigationContainer theme={SpotifyTheme}>
-        <TabNavigator />
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : SpotifyTheme}>
+        <RootNavigator />
       </NavigationContainer>
     </AppearanceProvider>
   );
@@ -23,6 +22,7 @@ export default function App() {
 
 const SpotifyTheme = {
   ...DefaultTheme,
+  dark: false,
   colors: {
     ...DefaultTheme.colors,
     primary: '#ffffff',

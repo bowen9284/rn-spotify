@@ -8,6 +8,7 @@ import { Foundation } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {

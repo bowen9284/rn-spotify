@@ -2,28 +2,15 @@ import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import CustomButton from '../../components/CustomButton';
+import CustomTextInput from '../../components/CustomTextInput';
 
 const LoginScreen = () => {
   const { colors } = useTheme();
 
   return (
     <View style={styles.screen}>
-      <View>
-        <Text style={{ color: colors.text, ...styles.loginText }}>
-          Email or username
-        </Text>
-        <TextInput
-          style={{ backgroundColor: colors.secondary, ...styles.input }}
-        />
-      </View>
-      <View>
-        <Text style={{ color: colors.text, ...styles.loginText }}>
-          Password
-        </Text>
-        <TextInput
-          style={{ backgroundColor: colors.secondary, ...styles.input }}
-        />
-      </View>
+      <CustomTextInput title="Email or username"/>
+      <CustomTextInput title="Password"/>
       <View style={{ width: 125, alignSelf: 'center' }}>
         <CustomButton
           style={styles.loginButton}
@@ -49,14 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 15,
   },
-  input: {
-    height: 40,
-    marginBottom: 30,
-  },
-  loginText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
+ 
   loginButton: {
     backgroundColor: '#535353',
   },

@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 const CustomButton = ({ onPress, title, style, image }) => {
-  console.log(style);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -21,7 +20,7 @@ const CustomButton = ({ onPress, title, style, image }) => {
         ) : null}
       </View>
       <View>
-        <Text style={[styles.customButtonText, style.fontSize ]}>
+        <Text style={styles.customButtonText}>
           {title}
         </Text>
       </View>
@@ -40,10 +39,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     marginVertical: 5,
-    height: 50,
   },
   customButtonText: {
-      alignSelf: ;
     fontSize: 14,
     color: '#fff',
     fontWeight: 'bold',

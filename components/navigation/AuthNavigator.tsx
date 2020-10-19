@@ -4,6 +4,7 @@ import LoginScreen from '../../Screens/Authentication/LoginScreen';
 import LandingScreen from '../../Screens/Authentication/LandingScreen';
 import AuthorizationScreen from '../../Screens/Authentication/AuthorizationScreen';
 import { useTheme } from '@react-navigation/native';
+import LoginNoPasswordScreen from '../../Screens/Authentication/LoginNoPasswordScreen';
 
 const AuthStack = createStackNavigator();
 
@@ -30,6 +31,23 @@ const AuthNavigator = () => {
             backgroundColor: colors.background,
           },
           title: '',
+        }}
+      />
+      <AuthStack.Screen
+        name="LoginNoPasswordScreen"
+        component={LoginNoPasswordScreen}
+        options={{
+          headerShown: true,
+          headerTintColor: colors.text,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 16
+          },
+          headerStyle: {
+            backgroundColor: '#2D2D2D',
+            elevation: 0,
+          },
+          title: 'Log in without password',
         }}
       />
     </AuthStack.Navigator>

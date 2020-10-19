@@ -1,7 +1,7 @@
 import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/buttons/CustomButton';
 
 const LandingScreen = ({ navigation }) => {
   const { colors } = useTheme();
@@ -72,11 +72,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignSelf: 'stretch',
-    marginHorizontal: 25,
+    marginHorizontal: 20,
     marginBottom: 40,
   },
   signUpButton: {
-    width: '100%',
     backgroundColor: '#1DB954',
   },
   signUpFacebookButton: {

@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1DB954',
   },
   signUpFacebookButton: {
-    borderColor: '#212121',
-    borderWidth: 2,
+    borderColor: '#535353',
+    borderWidth: 1,
   },
 });

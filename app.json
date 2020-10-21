@@ -17,10 +17,17 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.bowen.rnspotify",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.bowen.rnspotify",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

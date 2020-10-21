@@ -26,9 +26,9 @@ const CustomButton: React.FC<Props> = ({
       style={{ ...styles.customButtonContainer, ...style }}
     >
       {image ? (
-        <View style={styles.alignLeft}>{renderButtonIcon()}</View>
+        <View style={styles.imageLeft}>{renderButtonIcon()}</View>
       ) : null}
-      <View>
+      <View style={styles.flex30}>
         <Text style={{ ...styles.customButtonText, ...textStyle }}>
           {title}
         </Text>
@@ -41,6 +41,7 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   customButtonContainer: {
+    flexDirection: 'row',
     justifyContent: 'center',
     elevation: 5,
     borderRadius: 40,
@@ -50,17 +51,21 @@ const styles = StyleSheet.create({
   },
   customButtonText: {
     fontSize: 13,
+    textAlign: 'center',
     color: '#fff',
     fontWeight: 'bold',
-    textAlign: 'center',
   },
   customButtonImage: {
+    marginLeft: 5,
     width: 20,
     height: 20,
   },
-  alignLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  imageLeft: {
+    flex: 1,
+    alignItems: 'flex-start',
     width: 50,
+  },
+  flex30: {
+    flex: 30,
   },
 });

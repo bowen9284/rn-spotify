@@ -3,6 +3,7 @@
     "name": "rn-spotify",
     "slug": "rn-spotify",
     "version": "1.0.0",
+    "scheme": "rn-spotify",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {

@@ -1,12 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useColorScheme} from 'react-native';
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
-import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
+import { AppearanceProvider } from 'react-native-appearance';
 import RootNavigator from './components/navigation/RootNavigator';
+
 
 export default function App() {
   const scheme = useColorScheme();

@@ -1,6 +1,6 @@
-import { RouteProp, useTheme } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import ControlsWidget from '../components/inputs/ControlsWidget';
 import { PrimaryText } from '../components/inputs/PrimaryText';
@@ -23,7 +23,6 @@ type Props = {
 
 const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
   const { id } = route.params;
-  const { colors } = useTheme();
 
   const authContext = useContext(AuthContext);
   const userContext = useContext(UserContext);
@@ -98,7 +97,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
   };
 
   let handleFollowPress = (isFollowing: boolean) => {
-    followPlaylist(id)
+    followPlaylist();
     toggleIsFollowing(isFollowing);
   };
 
@@ -111,9 +110,14 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
     playlist?.tracks.items || new Array<PlaylistItem>();
 
   let trackTiles = tracks.map((playlistTrack, index) => {
+    // @todo fix duration. Incorrect amount
     totalDuration += playlistTrack.track.duration_ms;
     return <PlaylistRow key={index} playlistTrack={playlistTrack} />;
   });
+
+  if (!playlist) {
+    return <PrimaryText>Loading...</PrimaryText>;
+  }
 
   return (
     <View style={styles.container}>
@@ -126,7 +130,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
         </View>
 
         <View style={styles.playlistMetaContainer}>
-          {/* android only */}
+          {/* @todo android only */}
           {/* <Text style={[styles.playlistTitle, { color: colors.primary }]}>
             {playlist?.name}
           </Text> */}
@@ -136,6 +140,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
         </View>
         <View style={styles.controlsContainer}>
           <View style={styles.leftControls}>
+            {/* @todo image isn't always there */}
             {/* <Image
             style={styles.ownerImage}
             source={{ uri: playlist?.owner.images[0].url }}
@@ -155,9 +160,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
             />
           </View>
           <View style={styles.rightControls}>
-            <View style={{ backgroundColor: 'white' }}>
-              <Ionicons name="play-circle" size={50} color="green" />
-            </View>
+            <Ionicons name="play-circle" size={75} color="green" />
           </View>
         </View>
 

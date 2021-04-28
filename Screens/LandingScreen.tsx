@@ -1,7 +1,7 @@
 import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import CustomButton from '../../components/buttons/CustomButton';
+import CustomButton from '../components/buttons/CustomButton';
 
 const LandingScreen = ({ navigation }) => {
   const { colors } = useTheme();

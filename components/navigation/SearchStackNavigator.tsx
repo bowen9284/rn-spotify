@@ -2,7 +2,7 @@ import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const SearchStackNavigator = () => {
+const SearchStackNavigator: React.FC = () => {
   const { colors } = useTheme();
 
   return (

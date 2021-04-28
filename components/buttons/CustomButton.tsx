@@ -28,6 +28,7 @@ const CustomButton: React.FC<Props> = ({
       {image ? (
         <View style={styles.imageLeft}>{renderButtonIcon()}</View>
       ) : null}
+
       <View style={styles.flex30}>
         <Text style={{ ...styles.customButtonText, ...textStyle }}>
           {title}

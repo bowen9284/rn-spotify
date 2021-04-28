@@ -1,25 +1,25 @@
 import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import CustomButton from '../../components/buttons/CustomButton';
-import CustomTextInput from '../../components/buttons/CustomTextInput';
+import SpotifyAuthButton from '../../components/buttons/SpotifyAuthButton';
+import SpotifyAuthTextInput from '../../components/buttons/SpotifyAuthTextInput';
 
 const LoginScreen = ({ navigation }) => {
   const { colors } = useTheme();
 
   return (
     <View style={styles.screen}>
-      <CustomTextInput title="Email or username" />
-      <CustomTextInput title="Password" />
+      <SpotifyAuthTextInput title="Email or username" />
+      <SpotifyAuthTextInput title="Password" />
       <View style={styles.buttonCenter}>
-        <CustomButton
+        <SpotifyAuthButton
           style={styles.loginButton}
           title="LOG IN"
           onPress={() => {}}
         />
       </View>
       <View style={{ alignSelf: 'center' }}>
-        <CustomButton
+        <SpotifyAuthButton
           textStyle={styles.loginWithoutPasswordText}
           style={styles.loginWithoutPasswordButton}
           title="LOG IN WITHOUT PASSWORD"

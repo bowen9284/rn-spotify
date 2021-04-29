@@ -1,0 +1,3 @@
+interface PlaylistImageUrl {
+    url: string;
+}

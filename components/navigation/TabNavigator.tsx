@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import HomeStackNavigator from './HomeStackNavigator';
 import LibraryStackNavigator from './LibraryStackNavigator';
 import SearchStackNavigator from './SearchStackNavigator';
@@ -9,9 +8,15 @@ import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const Tab = createBottomTabNavigator();
+export type TabParamList = {
+  HomeStackNavigator: undefined;
+  SearchStackNavigator: undefined;
+  LibraryStackNavigator: undefined;
+};
 
-const TabNavigator = () => {
+const Tab = createBottomTabNavigator<TabParamList>();
+
+const TabNavigator: React.FC = () => {
   const { colors } = useTheme();
 
   return (

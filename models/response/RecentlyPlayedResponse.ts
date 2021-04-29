@@ -1,0 +1,3 @@
+interface RecentlyPlayedResponse {
+    items: [TrackItem];
+}

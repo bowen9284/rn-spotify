@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@react-navigation/native';
-import CustomTextInput from '../../components/buttons/CustomTextInput';
-import CustomButton from '../../components/buttons/CustomButton';
+import SpotifyAuthTextInput from '../../components/buttons/SpotifyAuthTextInput';
+import SpotifyAuthButton from '../../components/buttons/SpotifyAuthButton';
 
 const LoginNoPasswordScreen = () => {
   const { colors } = useTheme();
@@ -22,9 +22,9 @@ const LoginNoPasswordScreen = () => {
         }}
       >
         <View style={styles.formContainer}>
-          <CustomTextInput title="Email or username" helperText={helperText} />
+          <SpotifyAuthTextInput title="Email or username" helperText={helperText} />
           <View style={styles.buttonCenter}>
-            <CustomButton
+            <SpotifyAuthButton
               title="GET LINK"
               style={styles.getLinkButton}
               onPress={() => {}}

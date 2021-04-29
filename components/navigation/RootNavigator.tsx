@@ -1,22 +1,40 @@
-import React, {useEffect, useState} from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
+import {
+  makeRedirectUri,
+  ResponseType,
+  useAuthRequest,
+} from 'expo-auth-session';
 import { vars } from '../../env';
-import AuthNavigator from './AuthNavigator';
 import TabNavigator from './TabNavigator';
 import { Button, View, StyleSheet } from 'react-native';
+import { AuthContext } from '../../context/authContext';
+import { UserContext, UserContextWrapper } from '../../context/userContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const discovery = {
   authorizationEndpoint: 'https://accounts.spotify.com/authorize',
   tokenEndpoint: 'https://accounts.spotify.com/api/token',
 };
 
-const RootNavigator = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+const RootNavigator: React.FC = () => {
+  const context = useContext(AuthContext);
+
   const [request, response, promptAsync] = useAuthRequest(
     {
+      responseType: ResponseType.Token,
       clientId: vars.CLIENT_ID,
-      scopes: ['user-read-email', 'playlist-modify-public'],
+      scopes: [
+        'user-read-email',
+        'playlist-modify-public',
+        'user-read-recently-played',
+        'playlist-read-private',
+        'user-follow-modify',
+        'user-follow-read',
+        'playlist-modify-private',
+        'playlist-read-private',
+        'playlist-read-collaborative',
+      ],
       // In order to follow the "Authorization Code Flow" to fetch token after authorizationEndpoint
       // this must be set to false
       usePKCE: false,
@@ -27,50 +45,49 @@ const RootNavigator = () => {
   );
 
   useEffect(() => {
-    if (response?.type === 'success') {
-        setIsLoggedIn(true);
-        console.log("here");
-        const { code } = response.params;
+    const getAuthToken = async () => {
+      try {
+        // const authToken = await AsyncStorage.getItem('authToken');
+        if (response?.type === 'success') {
+          const { access_token } = response.params;
+          context?.setToken(access_token);
+        }
+      } catch (e) {
+        console.log('Error getting auth token');
+      }
+    };
+    getAuthToken();
+  }, [response, AuthContext]);
 
-    }
-    console.log('response1', response)
-  }, [response]);
-
-  const ViewThing = () => {
-    if (isLoggedIn) {
+  const TempLoginView = () => {
+    if (context?.token) {
       return (
-        <TabNavigator/>
-      )
+        <UserContextWrapper>
+          <TabNavigator />
+        </UserContextWrapper>
+      );
     } else {
       return (
-      <View style={styles.screen}>
-        <Button
-          disabled={!request}
-          title="Login"
-          onPress={() => {
-            promptAsync();
+        <View style={styles.screen}>
+          <Button
+            disabled={!request}
+            title="Login"
+            onPress={() => {
+              promptAsync();
             }}
-        />
-      </View>
-      )
+          />
+        </View>
+      );
     }
-  }
+  };
 
-  return (
-    <ViewThing/>
-  );
-
-
-
-  //   const isLoggedIn = useSelector(
-  //     (state: any) => state.auth.isLoggedIn
-  //   );
+  return <TempLoginView />;
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 });
 

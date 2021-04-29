@@ -1,14 +1,21 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../../Screens/Authentication/LoginScreen';
-import LandingScreen from '../../Screens/Authentication/LandingScreen';
+import LandingScreen from '../../Screens/LandingScreen';
 import AuthorizationScreen from '../../Screens/Authentication/AuthorizationScreen';
 import { useTheme } from '@react-navigation/native';
 import LoginNoPasswordScreen from '../../Screens/Authentication/LoginNoPasswordScreen';
 
-const AuthStack = createStackNavigator();
+export type AuthStackParamList = {
+  LandingScreen: undefined;
+  LoginScreen: undefined;
+  AuthorizationScreen: undefined;
+  LoginNoPasswordScreen: undefined;
+};
 
-const AuthNavigator = () => {
+const AuthStack = createStackNavigator<AuthStackParamList>();
+
+const AuthNavigator: React.FC = () => {
   const { colors } = useTheme();
 
   return (
@@ -41,7 +48,7 @@ const AuthNavigator = () => {
           headerTintColor: colors.text,
           headerTitleAlign: 'center',
           headerTitleStyle: {
-            fontSize: 16
+            fontSize: 16,
           },
           headerStyle: {
             backgroundColor: '#2D2D2D',

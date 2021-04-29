@@ -1,7 +1,7 @@
 import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import CustomButton from '../../components/buttons/CustomButton';
+import SpotifyAuthButton from '../components/buttons/SpotifyAuthButton';
 
 const LandingScreen = ({ navigation }) => {
   const { colors } = useTheme();
@@ -22,12 +22,12 @@ const LandingScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <CustomButton
+        <SpotifyAuthButton
           title="Sign up free"
           style={styles.signUpButton}
           onPress={() => {}}
         />
-        <CustomButton
+        <SpotifyAuthButton
           title="Continue with Facebook"
           style={styles.signUpFacebookButton}
           image={require('../../assets/facebook_icon_blue.png')}

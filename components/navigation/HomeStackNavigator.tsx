@@ -1,23 +1,33 @@
-import { useTheme } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import HomeScreen from '../../Screens/HomeScreen/HomeScreen';
+import CustomPlaylistDetailScreen from '../../Screens/CustomPlaylistDetailScreen';
 
-const HomeStackNavigator = () => {
-  const { colors } = useTheme();
-
-  return (
-    <View style={styles.homeContainer}>
-      <Text style={{ color: colors.text }}>Home Navigator</Text>
-    </View>
-  );
+export type HomeStackParamList = {
+  HomeScreen: undefined;
+  CustomPlaylistDetailScreen: { id: string };
 };
 
-const styles = StyleSheet.create({
-  homeContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const HomeStack = createStackNavigator<HomeStackParamList>();
+
+const HomeStackNavigator: React.FC = () => {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{ headerShown: false }}
+      headerMode="screen"
+    >
+      <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
+      <HomeStack.Screen
+        name="CustomPlaylistDetailScreen"
+        component={CustomPlaylistDetailScreen}
+        options={{
+          headerShown: true,
+          headerBackTitleVisible: false,
+          headerTransparent: true,
+        }}
+      />
+    </HomeStack.Navigator>
+  );
+};
 
 export default HomeStackNavigator;

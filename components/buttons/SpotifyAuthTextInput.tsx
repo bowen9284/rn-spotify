@@ -7,7 +7,7 @@ type Props = {
   helperText?: string;
 };
 
-const CustomTextInput: React.FC<Props> = ({ title, helperText }) => {
+const SpotifyAuthTextInput: React.FC<Props> = ({ title, helperText }) => {
   const { colors } = useTheme();
 
   return (
@@ -21,7 +21,7 @@ const CustomTextInput: React.FC<Props> = ({ title, helperText }) => {
   );
 };
 
-export default CustomTextInput;
+export default SpotifyAuthTextInput;
 
 const styles = StyleSheet.create({
   buttonContainer: {

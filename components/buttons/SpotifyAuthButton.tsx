@@ -9,7 +9,7 @@ type Props = {
   textStyle?: any;
 };
 
-const CustomButton: React.FC<Props> = ({
+const SpotifyAuthButton: React.FC<Props> = ({
   onPress,
   title,
   style,
@@ -28,6 +28,7 @@ const CustomButton: React.FC<Props> = ({
       {image ? (
         <View style={styles.imageLeft}>{renderButtonIcon()}</View>
       ) : null}
+
       <View style={styles.flex30}>
         <Text style={{ ...styles.customButtonText, ...textStyle }}>
           {title}
@@ -37,7 +38,7 @@ const CustomButton: React.FC<Props> = ({
   );
 };
 
-export default CustomButton;
+export default SpotifyAuthButton;
 
 const styles = StyleSheet.create({
   customButtonContainer: {

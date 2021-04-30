@@ -1,35 +1,34 @@
-import React, { createContext, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useEffect, useState } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
-type UserContextType = {
+type UserContextProps = {
   id: string;
   setId: (value: string) => void;
 };
-
-export const UserContext = React.createContext<UserContextType | undefined>(
-  undefined
-);
 
 type Props = {
   children: React.ReactNode;
 };
 
+export const UserContext = createContext<UserContextProps | undefined>(
+  undefined
+);
+
 export const UserContextWrapper: React.FC<Props> = ({ children }) => {
-  const [id, setId] = React.useState('');
+  const [id, setId] = useState<string>('');
 
   useEffect(() => {
-    let currentUserId = id;
+    const currentUserId = id;
     const storeUserId = async () => {
       try {
-        await AsyncStorage.setItem('userId', JSON.stringify(currentUserId));
+        await SecureStore.setItemAsync('userId', currentUserId);
       } catch (e) {
-        console.log('error storing userId');
+        console.log('user conerror storing userId', e);
       }
     };
-
-    setId(currentUserId);
     storeUserId();
-  }, []);
+    setId(currentUserId);
+  }, [id]);
 
   return (
     <UserContext.Provider value={{ id, setId }}>

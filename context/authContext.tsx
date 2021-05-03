@@ -1,36 +1,45 @@
-import React, { useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useEffect, useState } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
-type AuthContextType = {
+type AuthContextProps = {
   token: string;
   setToken: (value: string) => void;
 };
-
-export const AuthContext = React.createContext<AuthContextType | undefined>(
-  undefined
-);
 
 type Props = {
   children: React.ReactNode;
 };
 
+export const AuthContext = createContext<AuthContextProps>({
+  token: '',
+  setToken: () => {},
+});
+
 export const AuthContextWrapper: React.FC<Props> = ({ children }) => {
-  const [token, setToken] = React.useState('');
+  const [token, setToken] = useState<string>('');
 
   useEffect(() => {
     //@todo add check for refresh token
-    const currentToken = token;
+    let currentToken: string | null = token;
     const storeToken = async () => {
+      if (!currentToken) {
+        let storedToken = await SecureStore.getItemAsync('authToken');
+        if (storedToken) {
+          setToken(storedToken);
+          return;
+        }
+      }
+
       try {
-        await AsyncStorage.setItem('authToken', JSON.stringify(currentToken));
+        await SecureStore.setItemAsync('authToken', currentToken!);
+        setToken(currentToken!);
       } catch (e) {
         console.log('error storing token');
       }
     };
 
-    setToken(currentToken);
     storeToken();
-  }, []);
+  }, [token]);
 
   return (
     <AuthContext.Provider value={{ token, setToken }}>

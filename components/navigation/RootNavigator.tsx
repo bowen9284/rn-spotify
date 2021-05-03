@@ -9,8 +9,6 @@ import { vars } from '../../env';
 import TabNavigator from './TabNavigator';
 import { Button, View, StyleSheet } from 'react-native';
 import { AuthContext } from '../../context/authContext';
-import { UserContext, UserContextWrapper } from '../../context/userContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const discovery = {
   authorizationEndpoint: 'https://accounts.spotify.com/authorize',
@@ -47,25 +45,20 @@ const RootNavigator: React.FC = () => {
   useEffect(() => {
     const getAuthToken = async () => {
       try {
-        // const authToken = await AsyncStorage.getItem('authToken');
         if (response?.type === 'success') {
           const { access_token } = response.params;
-          context?.setToken(access_token);
+          context.setToken(access_token);
         }
       } catch (e) {
         console.log('Error getting auth token');
       }
     };
     getAuthToken();
-  }, [response, AuthContext]);
+  }, [response]);
 
   const TempLoginView = () => {
     if (context?.token) {
-      return (
-        <UserContextWrapper>
-          <TabNavigator />
-        </UserContextWrapper>
-      );
+      return <TabNavigator />;
     } else {
       return (
         <View style={styles.screen}>

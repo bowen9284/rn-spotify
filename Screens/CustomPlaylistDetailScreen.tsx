@@ -1,5 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import ControlsWidget from '../components/inputs/ControlsWidget';
@@ -10,7 +10,7 @@ import PlaylistRow from '../components/playlists/PlaylistRow';
 import { AuthContext } from '../context/authContext';
 import { getDurationInHoursAndMinutes } from '../utils/dateUtil';
 import { Ionicons } from '@expo/vector-icons';
-import { UserContext } from '../context/userContext';
+import { SpotifyContext } from '../services/spotifyService';
 
 type CustomPlaylistDetailScreenRouteProp = RouteProp<
   HomeStackParamList,
@@ -22,78 +22,52 @@ type Props = {
 };
 
 const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
-  const { id } = route.params;
+  const { playlistId } = route.params;
 
   const authContext = useContext(AuthContext);
-  const userContext = useContext(UserContext);
+  const spotifyService = useContext(SpotifyContext);
 
+  const [numOfLikes, setNumOfLikes] = useState<number>(0);
+  const [isFollowing, toggleIsFollowing] = useState<boolean>(false);
   const [playlist, setPlaylist] = useState<PlaylistResponse | undefined>(
     undefined
   );
-  const [numOfLikes, setNumOfLikes] = useState<number>(0);
-  const [isFollowing, toggleIsFollowing] = useState<boolean>(false);
+
+  const getPlaylistMemo = useCallback(async () => {
+    const response = await spotifyService?.fetchPlaylist(playlistId);
+    return response as PlaylistResponse;
+  }, [playlist]);
+
+  const getIsFollowingMemo = useCallback(async () => {
+    const response = await spotifyService?.fetchIsFollowing(playlistId);
+    return response as boolean;
+  }, [isFollowing]);
 
   useEffect(() => {
-    const fetchPlaylist = async () => {
-      try {
-        let response = await fetch(
-          `https://api.spotify.com/v1/playlists/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authContext?.token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        let playlistResponse = (await response.json()) as PlaylistResponse;
+    const getPlaylist = async () => {
+      let playlistResponse = await getPlaylistMemo();
+      if (playlistResponse) {
         setPlaylist(playlistResponse);
-        setNumOfLikes(playlistResponse.followers.total);
-      } catch (error) {
-        console.error(error);
+        setNumOfLikes(playlistResponse?.followers.total);
+      } else {
+        console.log('problem getting playlist');
       }
     };
-    fetchPlaylist();
+
+    getPlaylist();
   }, []);
 
   useEffect(() => {
-    const fetchIsFollowing = async () => {
-      try {
-        let response = await fetch(
-          `https://api.spotify.com/v1/playlists/${id}/followers/contains?ids=${userContext?.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authContext?.token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        let json: boolean[] = await response.json();
-        toggleIsFollowing(json[0]);
-      } catch (error) {
-        console.error(error);
-      }
+    const getIsFollowing = async () => {
+      let isFollowingResponse = await getIsFollowingMemo();
+      toggleIsFollowing(isFollowingResponse);
     };
-    fetchIsFollowing();
+    getIsFollowing();
   }, []);
 
   const followPlaylist = async () => {
-    let httpMethod = isFollowing ? 'DELETE' : 'PUT';
-
-    try {
-      let response = await fetch(
-        `https://api.spotify.com/v1/playlists/${id}/followers`,
-        {
-          method: httpMethod,
-          headers: {
-            Authorization: `Bearer ${authContext?.token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      console.log(response.ok);
-    } catch (error) {
-      console.error(error);
-    }
+    spotifyService?.followPlaylist(isFollowing, playlistId)
+   
   };
 
   let handleFollowPress = (isFollowing: boolean) => {

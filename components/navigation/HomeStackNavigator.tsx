@@ -5,7 +5,7 @@ import CustomPlaylistDetailScreen from '../../Screens/CustomPlaylistDetailScreen
 
 export type HomeStackParamList = {
   HomeScreen: undefined;
-  CustomPlaylistDetailScreen: { id: string };
+  CustomPlaylistDetailScreen: { playlistId: string };
 };
 
 const HomeStack = createStackNavigator<HomeStackParamList>();

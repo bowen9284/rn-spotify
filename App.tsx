@@ -1,23 +1,20 @@
 import React from 'react';
-import { StatusBar, useColorScheme } from 'react-native';
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from '@react-navigation/native';
+import { StatusBar } from 'react-native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { AppearanceProvider } from 'react-native-appearance';
 import RootNavigator from './components/navigation/RootNavigator';
+import { SpotifyProvider } from './services/spotifyService';
 import { AuthContextWrapper } from './context/authContext';
 
 export default function App() {
-  const scheme = useColorScheme();
-
   return (
     <AppearanceProvider>
       <NavigationContainer theme={SpotifyTheme}>
         <StatusBar barStyle="light-content" />
         <AuthContextWrapper>
-          <RootNavigator />
+          <SpotifyProvider>
+            <RootNavigator />
+          </SpotifyProvider>
         </AuthContextWrapper>
       </NavigationContainer>
     </AppearanceProvider>

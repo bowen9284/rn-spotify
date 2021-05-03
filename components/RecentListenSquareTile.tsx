@@ -17,7 +17,7 @@ const RecentListenSquareTile: React.FC<Props> = ({ id, images, name }) => {
       style={styles.recentSquareContainer}
       onPress={() =>
         navigation.navigate('CustomPlaylistDetailScreen', {
-          id: id,
+          playlistId: id,
         })
       }
     >

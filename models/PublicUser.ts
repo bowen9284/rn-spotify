@@ -6,5 +6,5 @@ interface PublicUser {
     uri: string;
     display_name: string;
     followers: Followers;
-    images: SpotifyImage[];
+    images?: SpotifyImage[];
 }

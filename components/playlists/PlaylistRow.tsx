@@ -13,7 +13,7 @@ const PlaylistRow: React.FC<Props> = ({ playlistTrack }) => {
     <View style={styles.trackRow}>
       <Image
         style={styles.albumImage}
-        source={{ uri: playlistTrack.track.album.images[0].url }}
+        source={{ uri: playlistTrack.track.album.images[0]?.url }}
       />
       <View style={styles.trackInfo}>
         <Text style={{ color: colors.text, fontWeight: '600' }}>

@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
   albumImage: {
     width: 60,
     height: 60,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
   },
   textContainer: {
     alignSelf: 'center',

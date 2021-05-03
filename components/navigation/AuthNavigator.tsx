@@ -32,7 +32,6 @@ const AuthNavigator: React.FC = () => {
         name="LoginScreen"
         component={LoginScreen}
         options={{
-          headerShown: true,
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.background,

@@ -45,6 +45,10 @@ const SPOTIFY_BASE_URI = 'https://api.spotify.com/v1';
 
 const fetchUserProfile = async () => {
   let user: PrivateUser = await spotifyFetch('/me');
+  // if (user.error.status === 401) {
+  //   await SecureStore.deleteItemAsync('authToken');
+  //   console.log(user.error);
+  // }
   try {
     await SecureStore.setItemAsync('userId', user.id);
   } catch (e) {
@@ -75,7 +79,7 @@ const fetchIsFollowing = async (playlistId: string) => {
 };
 
 const followPlaylist = async (isFollowing: boolean, playlistId: string) => {
-  const authContext = useContext(AuthContext);
+  let authToken = await SecureStore.getItemAsync('authToken');
 
   let httpMethod = isFollowing ? 'DELETE' : 'PUT';
 
@@ -85,7 +89,7 @@ const followPlaylist = async (isFollowing: boolean, playlistId: string) => {
       {
         method: httpMethod,
         headers: {
-          Authorization: `Bearer ${authContext?.token}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

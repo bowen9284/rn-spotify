@@ -1,30 +1,38 @@
 import { RouteProp } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import ControlsWidget from '../components/inputs/ControlsWidget';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import { PrimaryText } from '../components/inputs/PrimaryText';
-import { SecondaryText } from '../components/inputs/SecondaryText';
 import { HomeStackParamList } from '../components/navigation/HomeStackNavigator';
-import PlaylistRow from '../components/playlists/PlaylistRow';
-import { AuthContext } from '../context/authContext';
-import { getDurationInHoursAndMinutes } from '../utils/dateUtil';
-import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 import { SpotifyContext } from '../services/spotifyService';
+import PlaylistCover from '../components/playlists/PlaylistCover';
+import PlaylistContent from '../components/playlists/PlaylistContent';
+import PlaylistHeader from '../components/playlists/PlaylistHeader';
+import ControlsWidget from '../components/inputs/ControlsWidget';
+import { StackNavigationProp } from '@react-navigation/stack';
+import DetailOverlayScreen from './DetailOverlayScreen';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type CustomPlaylistDetailScreenRouteProp = RouteProp<
   HomeStackParamList,
   'CustomPlaylistDetailScreen'
 >;
 
+type CustomPlaylistDetailScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  'CustomPlaylistDetailScreen'
+>;
+
 type Props = {
   route: CustomPlaylistDetailScreenRouteProp;
+  navigation: CustomPlaylistDetailScreenNavigationProp;
 };
 
-const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
+const { Value } = Animated;
+
+const CustomPlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { playlistId } = route.params;
 
-  const authContext = useContext(AuthContext);
   const spotifyService = useContext(SpotifyContext);
 
   const [numOfLikes, setNumOfLikes] = useState<number>(0);
@@ -32,6 +40,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
   const [playlist, setPlaylist] = useState<PlaylistResponse | undefined>(
     undefined
   );
+  const [showPlaylistOverlay, togglePlaylistOverlay] = useState<boolean>(false);
 
   const getPlaylistMemo = useCallback(async () => {
     const response = await spotifyService?.fetchPlaylist(playlistId);
@@ -66,8 +75,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
   }, []);
 
   const followPlaylist = async () => {
-    spotifyService?.followPlaylist(isFollowing, playlistId)
-   
+    spotifyService?.followPlaylist(isFollowing, playlistId);
   };
 
   let handleFollowPress = (isFollowing: boolean) => {
@@ -77,70 +85,52 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route }) => {
 
   let handleDownloadPress = () => {};
 
-  let handleEllipsisPress = () => {};
-
-  let totalDuration = 0;
-  let tracks: PlaylistItem[] =
-    playlist?.tracks.items || new Array<PlaylistItem>();
-
-  let trackTiles = tracks.map((playlistTrack, index) => {
-    // @todo fix duration. Incorrect amount
-    totalDuration += playlistTrack.track.duration_ms;
-    return <PlaylistRow key={index} playlistTrack={playlistTrack} />;
-  });
+  let handleEllipsisPress = () => {
+    togglePlaylistOverlay(!showPlaylistOverlay);
+    navigation.setOptions;
+  };
 
   if (!playlist) {
     return <PrimaryText>Loading...</PrimaryText>;
   }
 
+  const y = new Value(0);
+
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.playlistHeaderContainer}>
-          <Image
-            style={styles.mainCoverImage}
-            source={{ uri: playlist?.images[0].url }}
+    <>
+      <View style={styles.container}>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={['#CCCCCC', 'transparent']}
+          end={{ x: 0.6, y: 1 }}
+          style={styles.background}
+        />
+        <View style={styles.content}>
+          <PlaylistCover imageUrl={playlist.images[0].url} />
+          <PlaylistHeader />
+          <ControlsWidget
+            description={playlist.description}
+            isFollowed={isFollowing}
+            owner={playlist.owner}
+            numOfLikes={numOfLikes}
+            totalDuration={0}
+            onFollowPress={handleFollowPress}
+            onDownloadPress={handleDownloadPress}
+            onEllipsisPress={handleEllipsisPress}
           />
+          <PlaylistContent y={y} playlist={playlist} />
         </View>
-
-        <View style={styles.playlistMetaContainer}>
-          {/* @todo android only */}
-          {/* <Text style={[styles.playlistTitle, { color: colors.primary }]}>
-            {playlist?.name}
-          </Text> */}
-          <SecondaryText numberOfLines={2}>
-            {playlist?.description}
-          </SecondaryText>
-        </View>
-        <View style={styles.controlsContainer}>
-          <View style={styles.leftControls}>
-            {/* @todo image isn't always there */}
-            {/* <Image
-            style={styles.ownerImage}
-            source={{ uri: playlist?.owner.images[0].url }}
-          /> */}
-            <PrimaryText style={styles.playlistOwner}>
-              {playlist?.owner.display_name}
-            </PrimaryText>
-            <SecondaryText style={styles.likesAndDuration}>
-              {numOfLikes.toLocaleString()} likes &#183;{' '}
-              {getDurationInHoursAndMinutes(totalDuration)}
-            </SecondaryText>
-            <ControlsWidget
-              isFollowed={isFollowing}
-              onFollowPress={handleFollowPress}
-              onDownloadPress={handleDownloadPress}
-              onEllipsisPress={handleEllipsisPress}
-            />
-          </View>
-          <View style={styles.rightControls}>
-            <Ionicons name="play-circle" size={75} color="green" />
-          </View>
-        </View>
-
-        <View>{trackTiles}</View>
-      </ScrollView>
-    </View>
+      </View>
+      {showPlaylistOverlay && (
+        <DetailOverlayScreen
+          navigation={navigation}
+          closeOverlay={handleEllipsisPress}
+          title={playlist.name}
+          imageUrl={playlist.images[0].url}
+          numOfFollowers={numOfLikes}
+        />
+      )}
+    </>
   );
 };
 
@@ -149,46 +139,21 @@ export default CustomPlaylistDetailScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 100,
+  },
+  content: {
     marginHorizontal: 20,
+    marginTop: 40,
   },
-  playlistHeaderContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mainCoverImage: {
-    width: 150,
-    height: 150,
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 500,
   },
   playlistTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: 15,
-  },
-  playlistOwner: {
-    fontWeight: 'bold',
-  },
-  playlistMetaContainer: {
-    marginVertical: 10,
-  },
-  controlsContainer: {
-    flexDirection: 'row',
-    marginBottom: 15,
-  },
-  leftControls: {
-    width: '45%',
-  },
-  rightControls: {
-    width: '55%',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-  },
-  likesAndDuration: {
-    marginTop: 10,
-    marginBottom: 15,
-  },
-  ownerImage: {
-    width: 20,
-    height: 20,
   },
 });

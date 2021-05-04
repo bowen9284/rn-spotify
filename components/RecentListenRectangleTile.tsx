@@ -22,7 +22,13 @@ const RecentListenRectangleTile: React.FC<Props> = ({ albumImages, name }) => {
         <Image style={styles.albumImage} source={{ uri: albumImages[0].url }} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={[styles.text, { color: colors.text }]}>{name}</Text>
+        <Text
+          numberOfLines={2}
+          ellipsizeMode="tail"
+          style={[styles.text, { color: colors.text }]}
+        >
+          {name}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -33,20 +39,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '48%',
     height: 60,
-    backgroundColor: 'gray',
+    backgroundColor: 'rgba(50, 50, 50, .5)',
     borderRadius: 5,
     marginVertical: 5,
   },
   albumImage: {
     width: 60,
     height: 60,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
   },
   textContainer: {
     alignSelf: 'center',
     flexShrink: 1,
-    padding: 3,
+    marginHorizontal: 5,
+    marginVertical: 10,
   },
   text: {
+    fontSize: 13,
     fontWeight: 'bold',
   },
 });

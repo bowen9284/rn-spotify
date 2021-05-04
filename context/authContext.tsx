@@ -17,7 +17,6 @@ export const AuthContext = createContext<AuthContextProps>({
 
 export const AuthContextWrapper: React.FC<Props> = ({ children }) => {
   const [token, setToken] = useState<string>('');
-
   useEffect(() => {
     //@todo add check for refresh token
     let currentToken: string | null = token;

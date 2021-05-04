@@ -1,10 +1,13 @@
 import { useTheme } from '@react-navigation/native';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { AuthContext } from '../context/authContext';
+import * as SecureStore from 'expo-secure-store';
 
 const HomeHeader: React.FC = () => {
+  const authContext = useContext(AuthContext);
   const { colors } = useTheme();
   const colorStyle = [{ color: colors.text }, styles.headerText];
 
@@ -12,6 +15,14 @@ const HomeHeader: React.FC = () => {
     <View style={styles.headerContainer}>
       <Text style={colorStyle}>Good morning</Text>
       <View style={styles.headerIcons}>
+        {/* temp button to relogin if token expires */}
+        {/* <Button
+          title="Button"
+          onPress={() => {
+            authContext.setToken('');
+            SecureStore.deleteItemAsync('authToken'); 
+          }}
+        /> */}
         <View>
           <Entypo name="back-in-time" size={28} color="white" />
         </View>

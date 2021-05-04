@@ -11,7 +11,7 @@ const MoreLike = () => {
     RecentlyPlayedResponse | undefined
   >(undefined);
 
-    // homescreen will get recently played. Based off of that response, 
+  // homescreen will get recently played. Based off of that response,
   /// I can grab genres and artists for other areas of the app
   useEffect(() => {
     const fetchRecentlyPlayed = async () => {
@@ -31,7 +31,7 @@ const MoreLike = () => {
         console.error(error);
       }
     };
-    
+
     fetchRecentlyPlayed();
   }, []);
 
@@ -39,7 +39,9 @@ const MoreLike = () => {
     return <Text>Loading...</Text>;
   }
 
-  return <HorizontalScroller title="More like" children={moreLikeItems!.items} />;
+  return (
+    <HorizontalScroller title="More like" children={moreLikeItems!.items} />
+  );
 };
 
 export default MoreLike;

@@ -1,31 +1,36 @@
 import { useTheme } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, Platform, StyleSheet, Text, View } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { HomeScreenNavigationProp } from '../Screens/HomeScreen/HomeScreen';
 import { AuthContext } from '../context/authContext';
-import * as SecureStore from 'expo-secure-store';
 
-const HomeHeader: React.FC = () => {
-  const authContext = useContext(AuthContext);
+type Props = {
+  navigation: HomeScreenNavigationProp;
+};
+
+const HomeHeader: React.FC<Props> = ({ navigation }) => {
   const { colors } = useTheme();
   const colorStyle = [{ color: colors.text }, styles.headerText];
+  const { signOut } = useContext(AuthContext);
 
   return (
     <View style={styles.headerContainer}>
       <Text style={colorStyle}>Good morning</Text>
       <View style={styles.headerIcons}>
         {/* temp button to relogin if token expires */}
-        {/* <Button
-          title="Button"
+        <Button
+          title="Logout"
           onPress={() => {
-            authContext.setToken('');
-            SecureStore.deleteItemAsync('authToken'); 
+            signOut();
           }}
-        /> */}
-        <View>
-          <Entypo name="back-in-time" size={28} color="white" />
-        </View>
+        />
+        {Platform.OS === 'android' ?? (
+          <View>
+            <Entypo name="back-in-time" size={28} color="white" />
+          </View>
+        )}
         <View>
           <EvilIcons name="gear" size={30} color="white" />
         </View>

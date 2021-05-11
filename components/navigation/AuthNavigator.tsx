@@ -2,15 +2,14 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../../Screens/Authentication/LoginScreen';
 import LandingScreen from '../../Screens/LandingScreen';
-import AuthorizationScreen from '../../Screens/Authentication/AuthorizationScreen';
 import { useTheme } from '@react-navigation/native';
-import LoginNoPasswordScreen from '../../Screens/Authentication/LoginNoPasswordScreen';
+import CreateAccountScreen from '../../Screens/Authentication/CreateAccount';
 
 export type AuthStackParamList = {
   LandingScreen: undefined;
   LoginScreen: undefined;
   AuthorizationScreen: undefined;
-  LoginNoPasswordScreen: undefined;
+  CreateAccountScreen: undefined;
 };
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
@@ -25,10 +24,6 @@ const AuthNavigator: React.FC = () => {
     >
       <AuthStack.Screen name="LandingScreen" component={LandingScreen} />
       <AuthStack.Screen
-        name="AuthorizationScreen"
-        component={AuthorizationScreen}
-      />
-      <AuthStack.Screen
         name="LoginScreen"
         component={LoginScreen}
         options={{
@@ -40,8 +35,8 @@ const AuthNavigator: React.FC = () => {
         }}
       />
       <AuthStack.Screen
-        name="LoginNoPasswordScreen"
-        component={LoginNoPasswordScreen}
+        name="CreateAccountScreen"
+        component={CreateAccountScreen}
         options={{
           headerShown: true,
           headerTintColor: colors.text,
@@ -49,11 +44,12 @@ const AuthNavigator: React.FC = () => {
           headerTitleStyle: {
             fontSize: 16,
           },
+          headerBackTitleVisible: false,
           headerStyle: {
-            backgroundColor: '#2D2D2D',
+            backgroundColor: colors.background,
             elevation: 0,
           },
-          title: 'Log in without password',
+          title: 'Create Account',
         }}
       />
     </AuthStack.Navigator>

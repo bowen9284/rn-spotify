@@ -1,13 +1,27 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
 import HomeHeader from '../../components/HomeHeader';
-import { PrimaryText } from '../../components/inputs/PrimaryText';
 import RecentListens from '../../components/RecentListens';
 import RecentPlaylists from '../../components/RecentPlaylists';
 import { SpotifyContext } from '../../services/spotifyService';
 import { LinearGradient } from 'expo-linear-gradient';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { HomeStackParamList } from '../../components/navigation/HomeStackNavigator';
 
-const HomeScreen: React.FC = () => {
+type HomeScreenRouteProp = RouteProp<HomeStackParamList, 'HomeScreen'>;
+
+export type HomeScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  'CustomPlaylistDetailScreen'
+>;
+
+type Props = {
+  route: HomeScreenRouteProp;
+  navigation: HomeScreenNavigationProp;
+};
+
+const HomeScreen: React.FC<Props> = ({ route, navigation }) => {
   const spotifyService = useContext(SpotifyContext);
 
   const [recentlyPlayed, setRecentlyPlayed] = useState<
@@ -15,16 +29,12 @@ const HomeScreen: React.FC = () => {
   >(undefined);
   const [user, setUser] = useState<PrivateUser | undefined>(undefined);
 
-  const getUserProfileMemo = useCallback(async () => {
-    const response = await spotifyService?.fetchUserProfile();
-
-    return response as PrivateUser;
-  }, [user]);
-
   useEffect(() => {
     let getUserProfile = async () => {
-      let user = await getUserProfileMemo();
-      setUser(user);
+      let response = await spotifyService?.fetchUserProfile();
+      if (response) {
+        setUser(response);
+      }
     };
 
     getUserProfile();
@@ -39,8 +49,8 @@ const HomeScreen: React.FC = () => {
     getRecentlyPlayed();
   }, []);
 
-  if (!user || !recentlyPlayed) {
-    return <PrimaryText>Loading...</PrimaryText>;
+  if (!recentlyPlayed?.items) {
+    return <ActivityIndicator/>
   }
 
   return (
@@ -48,13 +58,13 @@ const HomeScreen: React.FC = () => {
       <View style={styles.homeContainer}>
         <ScrollView>
           <LinearGradient
-            colors={['#cc0000', 'transparent']}
+            colors={['grey', 'transparent']}
             end={{ x: 0.6, y: 0.5 }}
             style={styles.background}
           />
           <View style={styles.homeContent}>
-            <HomeHeader />
-            <RecentListens items={recentlyPlayed?.items} />
+            <HomeHeader navigation={navigation} />
+            <RecentListens items={recentlyPlayed!.items} />
             {/* <MoreLike /> */}
             <RecentPlaylists />
           </View>

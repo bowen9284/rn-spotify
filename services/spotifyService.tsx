@@ -1,10 +1,12 @@
 import React, { createContext, useContext } from 'react';
-import { AuthContext } from '../context/authContext';
+import * as AuthSession from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
+import * as storageService from './secureStorageService';
 
 // Types
-type SpotifyContextType = {
+type SpotifyContextProps = {
   fetchUserProfile: () => Promise<PrivateUser | undefined>;
+  fetchRecentPlaylists: () => Promise<PlaylistsResponse | undefined>;
   fetchRecentlyPlayed: () => Promise<RecentlyPlayedResponse | undefined>;
   fetchPlaylist: (playlistId: string) => Promise<PlaylistResponse | undefined>;
   fetchIsFollowing: (playlistId: string) => Promise<boolean | undefined>;
@@ -16,7 +18,7 @@ type Props = {
 };
 
 // Exports
-export const SpotifyContext = createContext<SpotifyContextType | undefined>(
+export const SpotifyContext = createContext<SpotifyContextProps | undefined>(
   undefined
 );
 
@@ -29,6 +31,7 @@ export const SpotifyProvider: React.FC<Props> = ({ children }) => {
     <SpotifyContext.Provider
       value={{
         fetchUserProfile,
+        fetchRecentPlaylists,
         fetchRecentlyPlayed,
         fetchPlaylist,
         fetchIsFollowing,
@@ -44,18 +47,22 @@ export const SpotifyProvider: React.FC<Props> = ({ children }) => {
 const SPOTIFY_BASE_URI = 'https://api.spotify.com/v1';
 
 const fetchUserProfile = async () => {
-  let user: PrivateUser = await spotifyFetch('/me');
-  // if (user.error.status === 401) {
-  //   await SecureStore.deleteItemAsync('authToken');
-  //   console.log(user.error);
-  // }
+  let user: PrivateUser;
   try {
-    await SecureStore.setItemAsync('userId', user.id);
+    user = await spotifyFetch('/me');
+    let success = await storageService.saveUserID(user.id);
+    if (success) {
+      return user;
+    }
   } catch (e) {
-    console.log('error storing userId', e);
+    console.log('There was an error fetching the user profile', e);
   }
+};
 
-  return user;
+const fetchRecentPlaylists = async () => {
+  const userId = await storageService.getUserID();
+  let response = await spotifyFetch(`/users/${userId}/playlists?limit=6`);
+  return response as PlaylistsResponse;
 };
 
 const fetchRecentlyPlayed = async () => {
@@ -69,7 +76,7 @@ const fetchPlaylist = async (playlistId: string) => {
 };
 
 const fetchIsFollowing = async (playlistId: string) => {
-  const userId = await SecureStore.getItemAsync('userId');
+  const userId: string = await storageService.getUserID();
 
   let response = await spotifyFetch(
     `/playlists/${playlistId}/followers/contains?ids=${userId}`
@@ -79,34 +86,32 @@ const fetchIsFollowing = async (playlistId: string) => {
 };
 
 const followPlaylist = async (isFollowing: boolean, playlistId: string) => {
-  let authToken = await SecureStore.getItemAsync('authToken');
+  let tokenResponse: AuthSession.TokenResponse = await storageService.getToken();
+  if (!tokenResponse) return;
 
   let httpMethod = isFollowing ? 'DELETE' : 'PUT';
 
   try {
-    let response = await fetch(
-      `${SPOTIFY_BASE_URI}/playlists/${playlistId}/followers`,
-      {
-        method: httpMethod,
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    console.log(response.ok);
+    await fetch(`${SPOTIFY_BASE_URI}/playlists/${playlistId}/followers`, {
+      method: httpMethod,
+      headers: {
+        Authorization: `Bearer ${tokenResponse.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
     console.error(error);
   }
 };
 
 const spotifyFetch = async (uri?: string): Promise<any> => {
-  let authToken = await SecureStore.getItemAsync('authToken');
+  let tokenResponse = await storageService.getToken();
+  if (!tokenResponse) return;
 
   try {
     let response = await fetch(`${SPOTIFY_BASE_URI}${uri}`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${tokenResponse.accessToken}`,
         'Content-Type': 'application/json',
       },
     });

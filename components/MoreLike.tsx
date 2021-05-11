@@ -1,12 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { AuthContext } from '../context/authContext';
+import { StyleSheet, Text } from 'react-native';
 import HorizontalScroller from './HorizontalScroller';
 
 const MoreLike = () => {
-  const context = useContext(AuthContext);
-
   const [moreLikeItems, setMoreLikeItems] = useState<
     RecentlyPlayedResponse | undefined
   >(undefined);

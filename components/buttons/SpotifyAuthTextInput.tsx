@@ -5,15 +5,16 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 type Props = {
   title: string;
   helperText?: string;
+  autoFocus?: boolean;
 };
 
-const SpotifyAuthTextInput: React.FC<Props> = ({ title, helperText }) => {
+const SpotifyAuthTextInput: React.FC<Props> = ({ title, helperText, autoFocus }) => {
   const { colors } = useTheme();
 
   return (
     <View style={styles.buttonContainer}>
       <Text style={{ color: colors.text, ...styles.labelText }}>{title}</Text>
-      <TextInput style={styles.textInput} />
+      <TextInput autoFocus={autoFocus} selectionColor='#1DB954' style={{color: colors.text, ...styles.textInput }} />
       <Text style={{ color: colors.text, ...styles.helperText }}>
         {helperText}
       </Text>
@@ -29,16 +30,17 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 40,
+    paddingHorizontal: 15,
     borderRadius: 5,
     backgroundColor: '#535353',
   },
   labelText: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   helperText: {
-    fontSize: 13,
+    fontSize: 12,
     marginVertical: 5
   },
 });

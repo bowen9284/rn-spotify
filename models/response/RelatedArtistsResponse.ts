@@ -1,0 +1,3 @@
+interface RelatedArtistsResponse {
+    artists: [Artist]
+}

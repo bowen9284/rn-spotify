@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const PlaylistHeader = () => {
   return (
     <View style={styles.container}>
+      
     </View>
   );
 };

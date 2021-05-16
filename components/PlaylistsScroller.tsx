@@ -4,7 +4,7 @@ import RecentListenSquareTile from './RecentListenSquareTile';
 
 type Props = {
   title: string;
-  items: [PlaylistsItem];
+  items: [SimplifiedPlaylistObject];
 };
 
 const PlaylistScroller: React.FC<Props> = ({ title, items }) => {
@@ -19,7 +19,7 @@ const PlaylistScroller: React.FC<Props> = ({ title, items }) => {
     );
   });
 
-  return <HorizontalScroller title={title} children={tiles} />;
+  return <HorizontalScroller title={title}>{tiles}</HorizontalScroller>;
 };
 
 export default PlaylistScroller;

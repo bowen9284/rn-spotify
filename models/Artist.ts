@@ -3,6 +3,10 @@ interface Artist {
     href: string;
     id: string;
     name: string;
-    type: Type;
+    type: Type.artist;
     uri: string;
+    genres: [string];
+    followers: Followers;
+    popularity: number;
+    images: [SpotifyImage]
 }

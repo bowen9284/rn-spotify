@@ -1,16 +1,16 @@
-interface PlaylistsItem {
+interface PlaylistObject {
     collaborative: boolean;
     description: string;
     external_urls: ExternalUrls;
+    followers: Followers;
     href: string;
     id: string;
     images: [SpotifyImage];
     name: string;
-    owner: Owner;
-    primary_color?: string;
+    owner: PublicUserObject;
     public: boolean;
     snapshot_id: string;
-    tracks: PlaylistTracks;
-    type: Type;
+    tracks: PlaylistTracksRefObject;
+    type: Type.playlist
     uri: string;
 }

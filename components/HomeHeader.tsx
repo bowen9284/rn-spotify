@@ -1,34 +1,31 @@
 import { useTheme } from '@react-navigation/native';
-import React, { useContext } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { AuthContext } from '../context/authContext';
-import * as SecureStore from 'expo-secure-store';
+import { HomeScreenNavigationProp } from '../screens/HomeScreen/HomeScreen';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const HomeHeader: React.FC = () => {
-  const authContext = useContext(AuthContext);
+type Props = {
+  navigation: HomeScreenNavigationProp;
+};
+
+const HomeHeader: React.FC<Props> = ({ navigation }) => {
   const { colors } = useTheme();
-  const colorStyle = [{ color: colors.text }, styles.headerText];
+  const headerStyle = [{ color: colors.text }, styles.headerText];
 
   return (
     <View style={styles.headerContainer}>
-      <Text style={colorStyle}>Good morning</Text>
+      <Text style={headerStyle}>Good morning</Text>
       <View style={styles.headerIcons}>
-        {/* temp button to relogin if token expires */}
-        {/* <Button
-          title="Button"
-          onPress={() => {
-            authContext.setToken('');
-            SecureStore.deleteItemAsync('authToken'); 
-          }}
-        /> */}
-        <View>
-          <Entypo name="back-in-time" size={28} color="white" />
-        </View>
-        <View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('RecentlyPlayedScreen')}
+        >
+          <Entypo name="back-in-time" size={27} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('SettingsScreen')}>
           <EvilIcons name="gear" size={30} color="white" />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

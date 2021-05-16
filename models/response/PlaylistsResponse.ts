@@ -1,6 +1,6 @@
 interface PlaylistsResponse {
     href: string;
-    items: [PlaylistsItem];
+    items: [SimplifiedPlaylistObject];
     limit: number;
     next: string;
     offset: number;

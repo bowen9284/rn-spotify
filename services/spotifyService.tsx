@@ -1,13 +1,21 @@
 import React, { createContext, useContext } from 'react';
-import { AuthContext } from '../context/authContext';
-import * as SecureStore from 'expo-secure-store';
+import * as AuthSession from 'expo-auth-session';
+import * as storageService from './secureStorageService';
 
 // Types
-type SpotifyContextType = {
+type SpotifyContextProps = {
   fetchUserProfile: () => Promise<PrivateUser | undefined>;
+  fetchRecentPlaylists: () => Promise<PlaylistsResponse | undefined>;
+  fetchFeaturedPlaylists: () => Promise<FeaturedPlaylistsResponse | undefined>;
   fetchRecentlyPlayed: () => Promise<RecentlyPlayedResponse | undefined>;
-  fetchPlaylist: (playlistId: string) => Promise<PlaylistResponse | undefined>;
-  fetchIsFollowing: (playlistId: string) => Promise<boolean | undefined>;
+  fetchPlaylist: (playlistId: string) => Promise<PlaylistObject | undefined>;
+  fetchPlaylistTracks: (
+    playlistId: string
+  ) => Promise<PlaylistTracksRefObject | undefined>;
+  fetchRelatedArtists: (
+    artistId: string
+  ) => Promise<RelatedArtistsResponse | undefined>;
+  fetchIsFollowing: (playlistId: string) => Promise<[boolean] | undefined>;
   followPlaylist: (isFollowing: boolean, playlistId: string) => void;
 };
 
@@ -16,7 +24,7 @@ type Props = {
 };
 
 // Exports
-export const SpotifyContext = createContext<SpotifyContextType | undefined>(
+export const SpotifyContext = createContext<SpotifyContextProps | undefined>(
   undefined
 );
 
@@ -29,8 +37,12 @@ export const SpotifyProvider: React.FC<Props> = ({ children }) => {
     <SpotifyContext.Provider
       value={{
         fetchUserProfile,
+        fetchRecentPlaylists,
+        fetchFeaturedPlaylists,
         fetchRecentlyPlayed,
         fetchPlaylist,
+        fetchPlaylistTracks,
+        fetchRelatedArtists,
         fetchIsFollowing,
         followPlaylist,
       }}
@@ -40,22 +52,30 @@ export const SpotifyProvider: React.FC<Props> = ({ children }) => {
   );
 };
 
-// Endpoints
 const SPOTIFY_BASE_URI = 'https://api.spotify.com/v1';
 
 const fetchUserProfile = async () => {
-  let user: PrivateUser = await spotifyFetch('/me');
-  // if (user.error.status === 401) {
-  //   await SecureStore.deleteItemAsync('authToken');
-  //   console.log(user.error);
-  // }
+  let user: PrivateUser;
   try {
-    await SecureStore.setItemAsync('userId', user.id);
-  } catch (e) {
-    console.log('error storing userId', e);
+    user = await spotifyFetch('/me');
+    let success = await storageService.saveUserID(user.id);
+    if (success) {
+      return user;
+    }
+  } catch (error) {
+    console.log('There was an error fetching the user profile', error);
   }
+};
 
-  return user;
+const fetchRecentPlaylists = async () => {
+  const userId = await storageService.getUserID();
+  let response = await spotifyFetch(`/users/${userId}/playlists?limit=6`);
+  return response as PlaylistsResponse;
+};
+
+const fetchFeaturedPlaylists = async () => {
+  let response = await spotifyFetch(`/browse/featured-playlists`);
+  return response as FeaturedPlaylistsResponse;
 };
 
 const fetchRecentlyPlayed = async () => {
@@ -65,48 +85,58 @@ const fetchRecentlyPlayed = async () => {
 
 const fetchPlaylist = async (playlistId: string) => {
   let response = await spotifyFetch(`/playlists/${playlistId}`);
-  return response as PlaylistResponse;
+  return response as PlaylistObject;
+};
+
+const fetchPlaylistTracks = async (playlistId: string) => {
+  let response = await spotifyFetch(`/playlists/${playlistId}/tracks`);
+  console.log('tracks', response);
+  return response as PlaylistTracksRefObject;
+};
+
+const fetchRelatedArtists = async (artistId: string) => {
+  let response = await spotifyFetch(`/artists/${artistId}/related-artists`);
+  return response as RelatedArtistsResponse;
 };
 
 const fetchIsFollowing = async (playlistId: string) => {
-  const userId = await SecureStore.getItemAsync('userId');
+  const userId: string = await storageService.getUserID();
 
   let response = await spotifyFetch(
     `/playlists/${playlistId}/followers/contains?ids=${userId}`
   );
 
-  return response[0];
+  return response as [boolean];
 };
 
 const followPlaylist = async (isFollowing: boolean, playlistId: string) => {
-  let authToken = await SecureStore.getItemAsync('authToken');
+  let tokenResponse: AuthSession.TokenResponse = await storageService.getToken();
+  if (!tokenResponse) return;
 
   let httpMethod = isFollowing ? 'DELETE' : 'PUT';
 
   try {
-    let response = await fetch(
-      `${SPOTIFY_BASE_URI}/playlists/${playlistId}/followers`,
-      {
-        method: httpMethod,
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    console.log(response.ok);
+    await fetch(`${SPOTIFY_BASE_URI}/playlists/${playlistId}/followers`, {
+      method: httpMethod,
+      headers: {
+        Authorization: `Bearer ${tokenResponse.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
     console.error(error);
   }
 };
 
+// @todo add error handling for spotify error object
 const spotifyFetch = async (uri?: string): Promise<any> => {
-  let authToken = await SecureStore.getItemAsync('authToken');
+  let tokenResponse = await storageService.getToken();
+  if (!tokenResponse) return;
 
   try {
     let response = await fetch(`${SPOTIFY_BASE_URI}${uri}`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${tokenResponse.accessToken}`,
         'Content-Type': 'application/json',
       },
     });

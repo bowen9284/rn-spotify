@@ -1,28 +1,34 @@
 import { useTheme } from '@react-navigation/native';
-import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 import { SecondaryText } from '../inputs/SecondaryText';
+import { Ionicons } from '@expo/vector-icons';
 
 type Props = {
-  playlistTrack: PlaylistItem;
+  track: TrackObject;
 };
 
-const PlaylistRow: React.FC<Props> = ({ playlistTrack }) => {
+const PlaylistRow: React.FC<Props> = ({ track }) => {
   const { colors } = useTheme();
+
+  if (!track) {
+    return <ActivityIndicator/>
+  }
+  
   return (
     <View style={styles.trackRow}>
       <Image
         style={styles.albumImage}
-        source={{ uri: playlistTrack.track.album.images[0]?.url }}
+        source={{ uri: track.album.images[0]?.url }}
       />
       <View style={styles.trackInfo}>
         <Text style={{ color: colors.text, fontWeight: '600' }}>
-          {playlistTrack.track.name}
+          {track.name}
         </Text>
-        <SecondaryText>{playlistTrack.track.artists[0].name}</SecondaryText>
+        <SecondaryText>{track.artists[0].name}</SecondaryText>
       </View>
       <View style={styles.trackElipsis}>
-        <Text style={{ color: colors.text }}>...</Text>
+        <Ionicons name="ellipsis-horizontal" size={24} color="gray" />
       </View>
     </View>
   );

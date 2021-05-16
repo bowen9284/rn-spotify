@@ -1,4 +1,4 @@
-interface PublicUser {
+interface PublicUserObject {
     external_urls?: ExternalUrls;
     href: string;
     id: string;

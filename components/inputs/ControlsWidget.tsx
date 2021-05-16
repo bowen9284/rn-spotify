@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SecondaryText } from './SecondaryText';
@@ -10,7 +10,7 @@ import IsFollowedHeart from './IsFollowedHeart';
 interface Props {
   description: string;
   isFollowed: boolean;
-  owner: PublicUser;
+  owner: PublicUserObject;
   numOfLikes: number;
   totalDuration: number;
   onFollowPress: (toggle: boolean) => void;
@@ -27,6 +27,10 @@ const ControlsWidget: React.FC<Props> = ({
   onDownloadPress,
   onEllipsisPress,
 }) => {
+
+  React.useEffect(() => {
+    console.log('widget', isFollowed);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -70,7 +74,7 @@ const ControlsWidget: React.FC<Props> = ({
                 onEllipsisPress();
               }}
             >
-              <Ionicons name="ellipsis-horizontal" size={30} color="gray" />
+              <Ionicons name="ellipsis-horizontal" size={24} color="gray" />
             </TouchableOpacity>
           </View>
         </View>
@@ -116,6 +120,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
 });

@@ -3,13 +3,14 @@ import { ActivityIndicator, StatusBar } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { AppearanceProvider } from 'react-native-appearance';
 import { SpotifyProvider } from './services/spotifyService';
-import AuthNavigator from './components/navigation/AuthNavigator';
+import AuthNavigator from './navigation/AuthNavigator';
 import * as SecureStore from 'expo-secure-store';
-import TabNavigator from './components/navigation/TabNavigator';
+import TabNavigator from './navigation/TabNavigator';
 import * as AuthSession from 'expo-auth-session';
 import { vars } from './env/env';
 import { AuthContext } from './context/authContext';
 import * as storageService from './services/secureStorageService';
+import { enableScreens } from 'react-native-screens';
 
 export default function App() {
   const [state, dispatch] = React.useReducer(
@@ -63,6 +64,7 @@ export default function App() {
     'playlist-modify-private',
     'playlist-read-private',
     'playlist-read-collaborative',
+    'user-top-read',
   ];
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
@@ -88,7 +90,6 @@ export default function App() {
         if (isTokenExpired(tokenResponse)) {
           console.log('expired');
           let test = await refreshAccessToken(tokenResponse);
-          console.log(test);
           return;
         }
 
@@ -167,6 +168,8 @@ export default function App() {
     // We haven't finished checking forthe token yet
     return <ActivityIndicator />;
   }
+
+  enableScreens();
 
   return (
     <AppearanceProvider>

@@ -1,15 +1,21 @@
 import React, { createContext, useContext } from 'react';
 import * as AuthSession from 'expo-auth-session';
-import * as SecureStore from 'expo-secure-store';
 import * as storageService from './secureStorageService';
 
 // Types
 type SpotifyContextProps = {
   fetchUserProfile: () => Promise<PrivateUser | undefined>;
   fetchRecentPlaylists: () => Promise<PlaylistsResponse | undefined>;
+  fetchFeaturedPlaylists: () => Promise<FeaturedPlaylistsResponse | undefined>;
   fetchRecentlyPlayed: () => Promise<RecentlyPlayedResponse | undefined>;
-  fetchPlaylist: (playlistId: string) => Promise<PlaylistResponse | undefined>;
-  fetchIsFollowing: (playlistId: string) => Promise<boolean | undefined>;
+  fetchPlaylist: (playlistId: string) => Promise<PlaylistObject | undefined>;
+  fetchPlaylistTracks: (
+    playlistId: string
+  ) => Promise<PlaylistTracksRefObject | undefined>;
+  fetchRelatedArtists: (
+    artistId: string
+  ) => Promise<RelatedArtistsResponse | undefined>;
+  fetchIsFollowing: (playlistId: string) => Promise<[boolean] | undefined>;
   followPlaylist: (isFollowing: boolean, playlistId: string) => void;
 };
 
@@ -32,8 +38,11 @@ export const SpotifyProvider: React.FC<Props> = ({ children }) => {
       value={{
         fetchUserProfile,
         fetchRecentPlaylists,
+        fetchFeaturedPlaylists,
         fetchRecentlyPlayed,
         fetchPlaylist,
+        fetchPlaylistTracks,
+        fetchRelatedArtists,
         fetchIsFollowing,
         followPlaylist,
       }}
@@ -43,7 +52,6 @@ export const SpotifyProvider: React.FC<Props> = ({ children }) => {
   );
 };
 
-// Endpoints
 const SPOTIFY_BASE_URI = 'https://api.spotify.com/v1';
 
 const fetchUserProfile = async () => {
@@ -54,8 +62,8 @@ const fetchUserProfile = async () => {
     if (success) {
       return user;
     }
-  } catch (e) {
-    console.log('There was an error fetching the user profile', e);
+  } catch (error) {
+    console.log('There was an error fetching the user profile', error);
   }
 };
 
@@ -65,6 +73,11 @@ const fetchRecentPlaylists = async () => {
   return response as PlaylistsResponse;
 };
 
+const fetchFeaturedPlaylists = async () => {
+  let response = await spotifyFetch(`/browse/featured-playlists`);
+  return response as FeaturedPlaylistsResponse;
+};
+
 const fetchRecentlyPlayed = async () => {
   let response = await spotifyFetch('/me/player/recently-played?limit=6');
   return response as RecentlyPlayedResponse;
@@ -72,7 +85,18 @@ const fetchRecentlyPlayed = async () => {
 
 const fetchPlaylist = async (playlistId: string) => {
   let response = await spotifyFetch(`/playlists/${playlistId}`);
-  return response as PlaylistResponse;
+  return response as PlaylistObject;
+};
+
+const fetchPlaylistTracks = async (playlistId: string) => {
+  let response = await spotifyFetch(`/playlists/${playlistId}/tracks`);
+  console.log('tracks', response);
+  return response as PlaylistTracksRefObject;
+};
+
+const fetchRelatedArtists = async (artistId: string) => {
+  let response = await spotifyFetch(`/artists/${artistId}/related-artists`);
+  return response as RelatedArtistsResponse;
 };
 
 const fetchIsFollowing = async (playlistId: string) => {
@@ -82,7 +106,7 @@ const fetchIsFollowing = async (playlistId: string) => {
     `/playlists/${playlistId}/followers/contains?ids=${userId}`
   );
 
-  return response[0];
+  return response as [boolean];
 };
 
 const followPlaylist = async (isFollowing: boolean, playlistId: string) => {
@@ -104,6 +128,7 @@ const followPlaylist = async (isFollowing: boolean, playlistId: string) => {
   }
 };
 
+// @todo add error handling for spotify error object
 const spotifyFetch = async (uri?: string): Promise<any> => {
   let tokenResponse = await storageService.getToken();
   if (!tokenResponse) return;

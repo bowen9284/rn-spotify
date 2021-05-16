@@ -18,6 +18,7 @@ import { SecondaryText } from '../components/inputs/SecondaryText';
 type Props = {
   navigation: any;
   closeOverlay: () => void;
+  id: string;
   title: string;
   imageUrl: string;
   numOfFollowers: number;
@@ -26,13 +27,25 @@ type Props = {
 const DetailOverlayScreen: React.FC<Props> = ({
   navigation,
   closeOverlay,
+  id,
   title,
   imageUrl,
   numOfFollowers,
 }) => {
-
   // Unique spotify behavior:
   // Hide tab bar on render, show when closing overlay
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+    return () => {
+      navigation.setOptions({
+        headerShown: true,
+      });
+    };
+  }, []);
+
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
     parent.setOptions({

@@ -1,4 +1,4 @@
 type TrackItem = {
-    track: Track;
+    track: TrackObject;
     played_at: string;
 }

@@ -6,6 +6,6 @@ export const AuthContext = createContext<AuthContextProps>({
 });
 
 type AuthContextProps = {
-  signIn: () => void;
+  signIn: (data: any) => void;
   signOut: () => void;
 };

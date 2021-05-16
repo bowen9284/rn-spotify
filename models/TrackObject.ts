@@ -1,4 +1,4 @@
-interface Track {
+interface TrackObject {
     album: Album;
     artists: [Artist];
     available_markets: [string];
@@ -10,10 +10,12 @@ interface Track {
     href: string;
     id: string;
     is_local: boolean;
+    is_playable: boolean;
     name: string;
     popularity: number;
     preview_url: string;
     track_number: number;
-    type: Type;
+    type: Type.track;
     uri: string;
+    restrictions: {};
 }

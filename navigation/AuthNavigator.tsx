@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from '../../Screens/Authentication/LoginScreen';
-import LandingScreen from '../../Screens/LandingScreen';
+import LoginScreen from '../screens/authentication/LoginScreen';
+import LandingScreen from '../screens/LandingScreen';
 import { useTheme } from '@react-navigation/native';
-import CreateAccountScreen from '../../Screens/Authentication/CreateAccount';
+import CreateAccountScreen from '../screens/authentication/CreateAccount';
 
 export type AuthStackParamList = {
   LandingScreen: undefined;

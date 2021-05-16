@@ -16,7 +16,6 @@ const RecentPlaylists: React.FC = () => {
   useEffect(() => {
     const getRecentPlaylists = async () => {
       let response = await spotifyService?.fetchRecentPlaylists();
-      console.log('resp', response);
       setRecentPlaylists(response);
     };
     getRecentPlaylists();

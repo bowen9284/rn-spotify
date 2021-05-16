@@ -1,16 +1,15 @@
-interface PlaylistResponse {
+interface SimplifiedPlaylistObject {
     collaborative: boolean;
     description: string;
     external_urls: ExternalUrls;
-    followers: Followers;
     href: string;
     id: string;
-    images: [PlaylistImageUrl];
+    images: [SpotifyImage];
     name: string;
-    owner: PublicUserObject;
-    public?: boolean;
+    owner: Owner;
+    public: boolean;
     snapshot_id: string;
     tracks: PlaylistTracksRefObject;
-    type: Type;
+    type: Type.playlist
     uri: string;
 }

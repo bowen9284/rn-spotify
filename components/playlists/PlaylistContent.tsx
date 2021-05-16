@@ -1,20 +1,39 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import PlaylistRow from './PlaylistRow';
 import Animated from 'react-native-reanimated';
+import { useSpotifyApi } from '../../services/spotifyService';
 
 type Props = {
   y: Animated.Value<number>;
-  playlist: PlaylistResponse;
+  playlist: PlaylistObject;
 };
 
 const PlaylistContent: React.FC<Props> = ({ y, playlist }) => {
-  let tracks: PlaylistItem[] =
-    playlist?.tracks.items || new Array<PlaylistItem>();
+  const spotifyApi = useSpotifyApi();
+  const [tracks, setTracks] = useState<PlaylistTracksRefObject | undefined>(
+    undefined
+  );
+  // check if the playist has an array of tracks
+  // if it doesn't fetch the contentent from tracks.href url
+  useEffect(() => {
+    if (!playlist.tracks) {
+      return;
+    }
+    
+    const getPlaylistTracks = async () => {
+      let fetchedPlaylist = await spotifyApi?.fetchPlaylist(playlist.id);
+        setTracks(fetchedPlaylist?.tracks);
+    };
+    getPlaylistTracks();
+  }, []);
 
-  let trackTiles = tracks.map((playlistTrack, index) => {
-    // @todo fix duration. Incorrect amount
-    return <PlaylistRow key={index} playlistTrack={playlistTrack} />;
+  if (!tracks) {
+    return <ActivityIndicator />;
+  }
+
+  let trackTiles = tracks.items?.map((playlistTrack, index) => {
+    return <PlaylistRow key={index} track={playlistTrack.track} />;
   });
 
   return (

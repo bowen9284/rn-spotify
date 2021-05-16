@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import { PrimaryText } from '../components/inputs/PrimaryText';
-import { HomeStackParamList } from '../components/navigation/HomeStackNavigator';
+import { HomeStackParamList } from '../navigation/HomeStackNavigator';
 import Animated from 'react-native-reanimated';
 import { SpotifyContext } from '../services/spotifyService';
 import PlaylistCover from '../components/playlists/PlaylistCover';
@@ -13,45 +13,34 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import DetailOverlayScreen from './DetailOverlayScreen';
 import { LinearGradient } from 'expo-linear-gradient';
 
-type CustomPlaylistDetailScreenRouteProp = RouteProp<
+type PlaylistDetailScreenRouteProp = RouteProp<
   HomeStackParamList,
-  'CustomPlaylistDetailScreen'
+  'PlaylistDetailScreen'
 >;
 
-type CustomPlaylistDetailScreenNavigationProp = StackNavigationProp<
+type PlaylistDetailScreenNavigationProp = StackNavigationProp<
   HomeStackParamList,
-  'CustomPlaylistDetailScreen'
+  'PlaylistDetailScreen'
 >;
 
 type Props = {
-  route: CustomPlaylistDetailScreenRouteProp;
-  navigation: CustomPlaylistDetailScreenNavigationProp;
+  route: PlaylistDetailScreenRouteProp;
+  navigation: PlaylistDetailScreenNavigationProp;
 };
 
 const { Value } = Animated;
 
-const CustomPlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
+const PlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { playlistId } = route.params;
 
   const spotifyService = useContext(SpotifyContext);
 
   const [numOfLikes, setNumOfLikes] = useState<number>(0);
   const [isFollowing, toggleIsFollowing] = useState<boolean>(false);
-  const [playlist, setPlaylist] = useState<PlaylistResponse | undefined>(
+  const [playlist, setPlaylist] = useState<PlaylistObject | undefined>(
     undefined
   );
-  const [showPlaylistOverlay, togglePlaylistOverlay] = useState<boolean>(false);
-
-  const getPlaylistMemo = useCallback(async () => {
-    const response = await spotifyService?.fetchPlaylist(playlistId);
-    return response as PlaylistResponse;
-  }, [playlist]);
-
-  const getIsFollowingMemo = useCallback(async () => {
-    const response = await spotifyService?.fetchIsFollowing(playlistId);
-    return response as boolean;
-  }, [isFollowing]);
-
+  const [showDetailOverlay, toggleShowDetailOverlay] = useState<boolean>(false);
   useEffect(() => {
     const getPlaylist = async () => {
       let playlistResponse = await getPlaylistMemo();
@@ -59,7 +48,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         setPlaylist(playlistResponse);
         setNumOfLikes(playlistResponse?.followers.total);
       } else {
-        console.log('problem getting playlist');
+        console.log('There was a problem getting the playlist.');
       }
     };
 
@@ -69,10 +58,21 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     const getIsFollowing = async () => {
       let isFollowingResponse = await getIsFollowingMemo();
+      console.log('isFollow', isFollowingResponse);
       toggleIsFollowing(isFollowingResponse);
     };
     getIsFollowing();
   }, []);
+
+  const getPlaylistMemo = useCallback(async () => {
+    const response = await spotifyService?.fetchPlaylist(playlistId);
+    return response as PlaylistObject;
+  }, [playlist]);
+
+  const getIsFollowingMemo = useCallback(async () => {
+    const response = await spotifyService?.fetchIsFollowing(playlistId);
+    return response![0];
+  }, [isFollowing]);
 
   const followPlaylist = async () => {
     spotifyService?.followPlaylist(isFollowing, playlistId);
@@ -83,11 +83,11 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     toggleIsFollowing(isFollowing);
   };
 
+  // No op. Not suppoerted by Spotify public API
   let handleDownloadPress = () => {};
 
   let handleEllipsisPress = () => {
-    togglePlaylistOverlay(!showPlaylistOverlay);
-    navigation.setOptions;
+    toggleShowDetailOverlay(!showDetailOverlay);
   };
 
   if (!playlist) {
@@ -121,8 +121,9 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           <PlaylistContent y={y} playlist={playlist} />
         </View>
       </View>
-      {showPlaylistOverlay && (
+      {showDetailOverlay && (
         <DetailOverlayScreen
+          id={playlist.id}
           navigation={navigation}
           closeOverlay={handleEllipsisPress}
           title={playlist.name}
@@ -134,7 +135,7 @@ const CustomPlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   );
 };
 
-export default CustomPlaylistDetailScreen;
+export default PlaylistDetailScreen;
 
 const styles = StyleSheet.create({
   container: {

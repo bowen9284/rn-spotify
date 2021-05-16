@@ -1,6 +1,6 @@
-interface PlaylistTracks {
+interface PlaylistTracksRefObject {
     href: string;
-    items: [PlaylistItem];
+    items: [PlaylistTrackObject];
     limit: number;
     next?: string;
     offset: number;

@@ -12,11 +12,12 @@ const RecentListenSquareTile: React.FC<Props> = ({ id, images, name }) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
 
+  // create page fpr artist
   return (
     <TouchableOpacity
       style={styles.recentSquareContainer}
       onPress={() =>
-        navigation.navigate('CustomPlaylistDetailScreen', {
+        navigation.navigate('PlaylistDetailScreen', {
           playlistId: id,
         })
       }

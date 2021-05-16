@@ -3,5 +3,6 @@ enum Type {
     track,
     artist,
     playlist,
-    user
+    user,
+    episode
 }

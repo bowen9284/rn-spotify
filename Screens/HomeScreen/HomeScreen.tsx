@@ -7,13 +7,15 @@ import { SpotifyContext } from '../../services/spotifyService';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { HomeStackParamList } from '../../components/navigation/HomeStackNavigator';
+import { HomeStackParamList } from '../../navigation/HomeStackNavigator';
+import MoreLike from '../../components/MoreLike';
+import FeaturedPlaylists from '../../components/FeaturedPlaylists';
 
 type HomeScreenRouteProp = RouteProp<HomeStackParamList, 'HomeScreen'>;
 
 export type HomeScreenNavigationProp = StackNavigationProp<
   HomeStackParamList,
-  'CustomPlaylistDetailScreen'
+  'PlaylistDetailScreen'
 >;
 
 type Props = {
@@ -27,6 +29,7 @@ const HomeScreen: React.FC<Props> = ({ route, navigation }) => {
   const [recentlyPlayed, setRecentlyPlayed] = useState<
     RecentlyPlayedResponse | undefined
   >(undefined);
+
   const [user, setUser] = useState<PrivateUser | undefined>(undefined);
 
   useEffect(() => {
@@ -50,8 +53,10 @@ const HomeScreen: React.FC<Props> = ({ route, navigation }) => {
   }, []);
 
   if (!recentlyPlayed?.items) {
-    return <ActivityIndicator/>
+    return <ActivityIndicator />;
   }
+
+  let recentArtist = recentlyPlayed?.items[0].track.artists[0];
 
   return (
     <>
@@ -65,8 +70,9 @@ const HomeScreen: React.FC<Props> = ({ route, navigation }) => {
           <View style={styles.homeContent}>
             <HomeHeader navigation={navigation} />
             <RecentListens items={recentlyPlayed!.items} />
-            {/* <MoreLike /> */}
             <RecentPlaylists />
+            {/* <MoreLike artist={recentArtist} /> */}
+            <FeaturedPlaylists />
           </View>
         </ScrollView>
       </View>

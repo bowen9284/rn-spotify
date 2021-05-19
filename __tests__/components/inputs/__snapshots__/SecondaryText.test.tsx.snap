@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<Text
+  ellipsizeMode="tail"
+  style={
+    Object {
+      "color": "lightgray",
+      "fontSize": 13,
+    }
+  }
+>
+  some secondary text
+</Text>
+`;

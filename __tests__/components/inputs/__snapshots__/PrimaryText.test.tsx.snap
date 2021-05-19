@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<Text
+  style={
+    Object {
+      "color": "rgb(28, 28, 30)",
+    }
+  }
+>
+  some primary text
+</Text>
+`;

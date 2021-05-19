@@ -111,7 +111,8 @@ const PlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           <ControlsWidget
             description={playlist.description}
             isFollowed={isFollowing}
-            owner={playlist.owner}
+            ownerDisplayName={playlist.owner.display_name}
+            ownerImages={playlist.images}
             numOfLikes={numOfLikes}
             totalDuration={0}
             onFollowPress={handleFollowPress}

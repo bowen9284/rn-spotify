@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+      "height": 225,
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "rgb(28, 28, 30)",
+        "fontSize": 22,
+        "fontWeight": "bold",
+        "paddingVertical": 15,
+      }
+    }
+  >
+    Title
+  </Text>
+  <RCTScrollView
+    collapsable={false}
+    horizontal={true}
+    onGestureHandlerEvent={[Function]}
+    onGestureHandlerStateChange={[Function]}
+  >
+    <View />
+  </RCTScrollView>
+</View>
+`;

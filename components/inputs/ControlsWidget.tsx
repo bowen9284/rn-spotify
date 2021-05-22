@@ -10,7 +10,8 @@ import IsFollowedHeart from './IsFollowedHeart';
 interface Props {
   description: string;
   isFollowed: boolean;
-  owner: PublicUserObject;
+  ownerImages: SpotifyImage[];
+  ownerDisplayName: string
   numOfLikes: number;
   totalDuration: number;
   onFollowPress: (toggle: boolean) => void;
@@ -20,7 +21,8 @@ interface Props {
 const ControlsWidget: React.FC<Props> = ({
   description,
   isFollowed,
-  owner,
+  ownerImages,
+  ownerDisplayName,
   numOfLikes,
   totalDuration,
   onFollowPress,
@@ -39,16 +41,16 @@ const ControlsWidget: React.FC<Props> = ({
       </View>
       <View style={styles.controlsContainer}>
         <View style={styles.leftControls}>
-          {owner.images && (
+          {ownerImages && (
             <Image
               style={styles.ownerImage}
               source={{
-                uri: owner.images[0]!.url,
+                uri: ownerImages[0]!.url,
               }}
             />
           )}
           <PrimaryText style={styles.playlistOwner}>
-            {owner.display_name}
+            {ownerDisplayName}
           </PrimaryText>
           <SecondaryText style={styles.likesAndDuration}>
             {numOfLikes.toLocaleString()} likes &#183;{' '}

@@ -43,6 +43,19 @@ exports[`renders correctly 1`] = `
         }
       }
     >
+      <Image
+        source={
+          Object {
+            "uri": "someUrl",
+          }
+        }
+        style={
+          Object {
+            "height": 20,
+            "width": 20,
+          }
+        }
+      />
       <Text
         style={
           Object {
@@ -50,7 +63,9 @@ exports[`renders correctly 1`] = `
             "fontWeight": "bold",
           }
         }
-      />
+      >
+        Spotify
+      </Text>
       <Text
         ellipsizeMode="tail"
         style={

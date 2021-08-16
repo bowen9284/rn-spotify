@@ -1,17 +1,15 @@
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { HomeScreenNavigationProp } from '../screens/HomeScreen/HomeScreen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-type Props = {
-  navigation: HomeScreenNavigationProp;
-};
-
-const HomeHeader: React.FC<Props> = ({ navigation }) => {
+const HomeHeader = () => {
   const { colors } = useTheme();
+
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const headerStyle = [{ color: colors.text }, styles.headerText];
 
   return (

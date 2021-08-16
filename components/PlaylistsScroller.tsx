@@ -19,7 +19,7 @@ const PlaylistScroller: React.FC<Props> = ({ title, items }) => {
     );
   });
 
-  return <HorizontalScroller title={title}>{tiles}</HorizontalScroller>;
+  return <HorizontalScroller title={title} items={tiles} />;
 };
 
 export default PlaylistScroller;

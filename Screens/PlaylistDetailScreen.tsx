@@ -18,7 +18,7 @@ type PlaylistDetailScreenRouteProp = RouteProp<
   'PlaylistDetailScreen'
 >;
 
-type PlaylistDetailScreenNavigationProp = StackNavigationProp<
+export type PlaylistDetailScreenNavigationProp = StackNavigationProp<
   HomeStackParamList,
   'PlaylistDetailScreen'
 >;
@@ -37,9 +37,8 @@ const PlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const [numOfLikes, setNumOfLikes] = useState<number>(0);
   const [isFollowing, toggleIsFollowing] = useState<boolean>(false);
-  const [playlist, setPlaylist] = useState<PlaylistObject | undefined>(
-    undefined
-  );
+  const [playlist, setPlaylist] =
+    useState<PlaylistObject | undefined>(undefined);
   const [showDetailOverlay, toggleShowDetailOverlay] = useState<boolean>(false);
   useEffect(() => {
     const getPlaylist = async () => {
@@ -58,7 +57,6 @@ const PlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     const getIsFollowing = async () => {
       let isFollowingResponse = await getIsFollowingMemo();
-      console.log('isFollow', isFollowingResponse);
       toggleIsFollowing(isFollowingResponse);
     };
     getIsFollowing();
@@ -125,7 +123,6 @@ const PlaylistDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       {showDetailOverlay && (
         <DetailOverlayScreen
           id={playlist.id}
-          navigation={navigation}
           closeOverlay={handleEllipsisPress}
           title={playlist.name}
           imageUrl={playlist.images[0].url}

@@ -7,7 +7,7 @@ type Props = {
   name: string;
 };
 
-const RecentListenRectangleTile: React.FC<Props> = ({ albumImages, name }) => {
+const RecentListenRectangleTile = ({ albumImages, name }: Props) => {
   const { colors } = useTheme();
 
   const handlePress = () => {};

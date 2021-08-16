@@ -19,10 +19,11 @@ export default RecentlyPlayedScreen;
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
+    flex: 1,
     marginHorizontal: 15,
   },
   headerText: {
+    flex: 1,
     width: '50%',
     fontSize: 22,
     fontWeight: 'bold',

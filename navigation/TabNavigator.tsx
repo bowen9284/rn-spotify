@@ -22,7 +22,7 @@ const TabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeStackNavigator"
-      tabBarOptions={{ activeTintColor: colors.primary }}
+      options={{ tabBarActiveTintColor: colors.primary }}
     >
       <Tab.Screen
         name="HomeStackNavigator"

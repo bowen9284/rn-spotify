@@ -90,7 +90,6 @@ const fetchPlaylist = async (playlistId: string) => {
 
 const fetchPlaylistTracks = async (playlistId: string) => {
   let response = await spotifyFetch(`/playlists/${playlistId}/tracks`);
-  console.log('tracks', response);
   return response as PlaylistTracksRefObject;
 };
 

@@ -26,9 +26,8 @@ type Props = {
 const HomeScreen: React.FC<Props> = ({ route, navigation }) => {
   const spotifyService = useContext(SpotifyContext);
 
-  const [recentlyPlayed, setRecentlyPlayed] = useState<
-    RecentlyPlayedResponse | undefined
-  >(undefined);
+  const [recentlyPlayed, setRecentlyPlayed] =
+    useState<RecentlyPlayedResponse | undefined>(undefined);
 
   const [user, setUser] = useState<PrivateUser | undefined>(undefined);
 
@@ -45,7 +44,8 @@ const HomeScreen: React.FC<Props> = ({ route, navigation }) => {
 
   useEffect(() => {
     let getRecentlyPlayed = async () => {
-      const response = (await spotifyService?.fetchRecentlyPlayed()) as RecentlyPlayedResponse;
+      const response =
+        (await spotifyService?.fetchRecentlyPlayed()) as RecentlyPlayedResponse;
       setRecentlyPlayed(response);
     };
 
@@ -68,7 +68,7 @@ const HomeScreen: React.FC<Props> = ({ route, navigation }) => {
             style={styles.background}
           />
           <View style={styles.homeContent}>
-            <HomeHeader navigation={navigation} />
+            <HomeHeader />
             <RecentListens items={recentlyPlayed!.items} />
             <RecentPlaylists />
             {/* <MoreLike artist={recentArtist} /> */}

@@ -6,15 +6,14 @@ import HorizontalScroller from './HorizontalScroller';
 import RecentListenSquareTile from './RecentListenSquareTile';
 
 type Props = {
-  artist: Artist
+  artist: Artist;
 };
 
 const MoreLike: React.FC<Props> = ({ artist }) => {
   const spotifyService = useContext(SpotifyContext);
 
-  const [relatedArtists, setRelatedArtists] = useState<[Artist] | undefined>(
-    undefined
-  );
+  const [relatedArtists, setRelatedArtists] =
+    useState<[Artist] | undefined>(undefined);
 
   // homescreen will get recently played. Based off of that response,
   /// I can grab genres and artists for other areas of the app
@@ -32,7 +31,7 @@ const MoreLike: React.FC<Props> = ({ artist }) => {
   if (!relatedArtists) {
     return <Text>Loading...</Text>;
   }
-  const title = `More like ${artist.name}`
+  const title = `More like ${artist.name}`;
   let tiles = relatedArtists?.map((item, index) => {
     return (
       <RecentListenSquareTile
@@ -44,9 +43,7 @@ const MoreLike: React.FC<Props> = ({ artist }) => {
     );
   });
 
-  return <HorizontalScroller title={title} children={tiles} />;
+  return <HorizontalScroller title={title} items={tiles} />;
 };
 
 export default MoreLike;
-
-const styles = StyleSheet.create({});

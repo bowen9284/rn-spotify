@@ -5,15 +5,15 @@ import { PrimaryText } from './inputs/PrimaryText';
 
 type Props = {
   title: string;
-  children: React.ReactNode;
+  items: React.ReactNode;
 };
 
-const HorizontalScroller: React.FC<Props> = ({ title, children }) => {
+const HorizontalScroller: React.FC<Props> = ({ title, items }) => {
 
   return (
     <View style={styles.container}>
       <PrimaryText style={styles.headerText}>{title}</PrimaryText>
-      <ScrollView horizontal={true}>{children}</ScrollView>
+      <ScrollView horizontal={true}>{items}</ScrollView>
     </View>
   );
 };

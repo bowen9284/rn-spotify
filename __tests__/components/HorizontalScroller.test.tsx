@@ -1,13 +1,13 @@
-import React from "react";
-import renderer from "react-test-renderer";
-import HorizontalScroller from "../../components/HorizontalScroller";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import HorizontalScroller from '../../components/HorizontalScroller';
 
 const props = {
-  title: "Title",
-  children: [],
+  title: 'Title',
+  items: [],
 };
 
-test("renders correctly", () => {
+test('renders correctly', () => {
   const tree = renderer.create(<HorizontalScroller {...props} />).toJSON();
   expect(tree).toMatchSnapshot();
 });

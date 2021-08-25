@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { ActivityIndicator, StatusBar } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { AppearanceProvider } from 'react-native-appearance';
@@ -13,7 +13,8 @@ import * as storageService from './services/secureStorageService';
 import { enableScreens } from 'react-native-screens';
 
 export default function App() {
-  const [state, dispatch] = React.useReducer(
+
+  const [state, dispatch] = useReducer(
     (prevState: any, action: any) => {
       switch (action.type) {
         case 'RESTORE_TOKEN':

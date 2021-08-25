@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest"
+    "test": "jest",
+    "updateSnapshots": "jest -u --coverage=false"
   },
   "jest": {
     "preset": "jest-expo",
@@ -27,7 +28,7 @@
     "@react-native-async-storage/async-storage": "^1.15.2",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.9",
-    "@react-navigation/native": "^5.7.6",
+    "@react-navigation/native": "^6.0.2",
     "@react-navigation/stack": "^5.9.3",
     "expo": "^40.0.1",
     "expo-auth-session": "~3.0.0",

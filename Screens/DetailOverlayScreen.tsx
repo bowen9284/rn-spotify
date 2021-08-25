@@ -1,5 +1,5 @@
 import { BlurView } from 'expo-blur';
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import {
   Button,
   SafeAreaView,
@@ -14,9 +14,10 @@ import IsFollowedHeart from '../components/inputs/IsFollowedHeart';
 import { PrimaryText } from '../components/inputs/PrimaryText';
 import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { SecondaryText } from '../components/inputs/SecondaryText';
+import { useNavigation } from '@react-navigation/native';
+import { PlaylistDetailScreenNavigationProp } from './PlaylistDetailScreen';
 
 type Props = {
-  navigation: any;
   closeOverlay: () => void;
   id: string;
   title: string;
@@ -25,17 +26,16 @@ type Props = {
 };
 
 const DetailOverlayScreen: React.FC<Props> = ({
-  navigation,
   closeOverlay,
   id,
   title,
   imageUrl,
   numOfFollowers,
 }) => {
+  const navigation = useNavigation<PlaylistDetailScreenNavigationProp>();
   // Unique spotify behavior:
   // Hide tab bar on render, show when closing overlay
-
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
@@ -47,12 +47,12 @@ const DetailOverlayScreen: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    const parent = navigation.dangerouslyGetParent();
-    parent.setOptions({
+    const parent = navigation.getParent();
+    parent!.setOptions({
       tabBarVisible: false,
     });
     return () => {
-      parent.setOptions({
+      parent!.setOptions({
         tabBarVisible: true,
       });
     };

@@ -30,10 +30,6 @@ const ControlsWidget: React.FC<Props> = ({
   onEllipsisPress,
 }) => {
 
-  React.useEffect(() => {
-    console.log('widget', isFollowed);
-  }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.playlistMetaContainer}>

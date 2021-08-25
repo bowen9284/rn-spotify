@@ -43,7 +43,6 @@ const HomeStackNavigator: React.FC = () => {
       <HomeStack.Screen
         options={{
           headerTitle: 'Recently Played',
-          headerTransparent: true,
           headerBackTitleVisible: false,
         }}
         name="RecentlyPlayedScreen"

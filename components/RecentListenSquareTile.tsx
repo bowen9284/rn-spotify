@@ -1,6 +1,7 @@
 import { useNavigation, useTheme } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { PlaylistDetailScreenNavigationProp } from '../screens/PlaylistDetailScreen';
 
 type Props = {
   id: string;
@@ -8,11 +9,10 @@ type Props = {
   name: string;
 };
 
-const RecentListenSquareTile: React.FC<Props> = ({ id, images, name }) => {
+const RecentListenSquareTile = ({ id, images, name }: Props) => {
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<PlaylistDetailScreenNavigationProp>();
 
-  // create page fpr artist
   return (
     <TouchableOpacity
       style={styles.recentSquareContainer}

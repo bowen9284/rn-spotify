@@ -7,6 +7,9 @@ import { Foundation } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { TouchableOpacity, View, Text } from 'react-native';
+import { color } from 'react-native-reanimated';
+import PlayerBottomSheet from '../components/bottomSheet/PlayerBottomSheet';
 
 export type TabParamList = {
   HomeStackNavigator: undefined;
@@ -22,7 +25,7 @@ const TabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeStackNavigator"
-      options={{ tabBarActiveTintColor: colors.primary }}
+      tabBar={(props) => <MyTabBar {...props} />}
     >
       <Tab.Screen
         name="HomeStackNavigator"
@@ -59,3 +62,79 @@ const TabNavigator: React.FC = () => {
 };
 
 export default TabNavigator;
+
+function MyTabBar({ state, descriptors, navigation }) {
+  const { colors } = useTheme();
+
+  const showBottomSheet = () => {
+    return <PlayerBottomSheet />;
+  };
+
+  return (
+    <>
+      <TouchableOpacity onPress={() => showBottomSheet}>
+        <View
+          style={{
+            flexDirection: 'row',
+            height: 50,
+            backgroundColor: colors.card,
+            borderBottomColor: '#000000',
+            borderWidth: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: colors.text,
+            }}
+          >
+            Player
+          </Text>
+        </View>
+      </TouchableOpacity>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          height: 75,
+          backgroundColor: colors.card,
+        }}
+      >
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const label = options.tabBarLabel;
+
+          const isFocused = state.index === index;
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!isFocused && !event.defaultPrevented) {
+              // The `merge: true` option makes sure that the params inside the tab screen are preserved
+              navigation.navigate({ name: route.name, merge: true });
+            }
+          };
+
+          return (
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityState={isFocused ? { selected: true } : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarTestID}
+              onPress={onPress}
+              style={{ flex: 1 }}
+            >
+              <Text style={{ color: colors.text }}>{label}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </>
+  );
+}

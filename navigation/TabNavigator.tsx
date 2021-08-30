@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React from 'react';
+import React, { useState } from 'react';
 import HomeStackNavigator from './HomeStackNavigator';
 import LibraryStackNavigator from './LibraryStackNavigator';
 import SearchStackNavigator from './SearchStackNavigator';
@@ -7,14 +7,15 @@ import { Foundation } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { TouchableOpacity, View, Text } from 'react-native';
-import { color } from 'react-native-reanimated';
+import { TouchableOpacity, View, Text, Dimensions } from 'react-native';
+import { color, withSpring } from 'react-native-reanimated';
 import PlayerBottomSheet from '../components/bottomSheet/PlayerBottomSheet';
 
 export type TabParamList = {
   HomeStackNavigator: undefined;
   SearchStackNavigator: undefined;
   LibraryStackNavigator: undefined;
+  BottomSheet: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -65,14 +66,11 @@ export default TabNavigator;
 
 function MyTabBar({ state, descriptors, navigation }) {
   const { colors } = useTheme();
-
-  const showBottomSheet = () => {
-    return <PlayerBottomSheet />;
-  };
+  const [isSheetVisible, setisSheetVisible] = useState(false);
 
   return (
     <>
-      <TouchableOpacity onPress={() => showBottomSheet}>
+      <TouchableOpacity onPress={() => setisSheetVisible(!isSheetVisible)}>
         <View
           style={{
             flexDirection: 'row',
@@ -93,7 +91,6 @@ function MyTabBar({ state, descriptors, navigation }) {
           </Text>
         </View>
       </TouchableOpacity>
-
       <View
         style={{
           flexDirection: 'row',
@@ -129,12 +126,14 @@ function MyTabBar({ state, descriptors, navigation }) {
               testID={options.tabBarTestID}
               onPress={onPress}
               style={{ flex: 1 }}
+              key={options.tabBarLabel}
             >
               <Text style={{ color: colors.text }}>{label}</Text>
             </TouchableOpacity>
           );
         })}
       </View>
+      {isSheetVisible && <PlayerBottomSheet />}
     </>
   );
 }

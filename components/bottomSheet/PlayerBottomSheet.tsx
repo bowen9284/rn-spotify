@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Dimensions } from 'react-native';
 import { useWindowDimensions } from 'react-native';
 import { Text } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
@@ -6,18 +7,53 @@ import Animated, {
   useAnimatedGestureHandler,
   useSharedValue,
   useAnimatedStyle,
+  withSpring,
 } from 'react-native-reanimated';
 
-interface Props {}
+const SPRING_CONFIG = {
+  damping: 80,
+  overshootClamping: true,
+  restDisplacementThreshold: 0.1,
+  restSpeedThreshold: 0.1,
+  stiffness: 500,
+};
+
+interface Props {
+  active: boolean;
+}
 
 const PlayerBottomSheet = (props: Props) => {
   const dimensions = useWindowDimensions();
-
   const top = useSharedValue(dimensions.height);
-  const gestureHandler = useAnimatedGestureHandler();
+
+  useEffect(() => {
+    console.log('here');
+
+    return () => {
+      console.log('gone');
+      top.value = 0;
+    };
+  }, []);
+
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart(_, context) {
+      context.startTop = props.active ? 240 : top.value;
+    },
+    onActive(event, context) {
+      top.value = context.startTop + event.translationY;
+    },
+    onEnd(_, context) {
+      if (top.value > dimensions.height / 2 + 200) {
+        top.value = dimensions.height;
+      } else {
+        top.value = dimensions.height / 2;
+      }
+    },
+  });
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      top: top.value,
+      top: withSpring(top.value, SPRING_CONFIG),
     };
   });
 

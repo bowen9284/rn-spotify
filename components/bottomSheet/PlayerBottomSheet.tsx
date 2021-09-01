@@ -18,26 +18,24 @@ const SPRING_CONFIG = {
   stiffness: 500,
 };
 
-interface Props {
-  active: boolean;
-}
+interface Props {}
 
 const PlayerBottomSheet = (props: Props) => {
   const dimensions = useWindowDimensions();
   const top = useSharedValue(dimensions.height);
+  const startingPosition = top.value;
 
   useEffect(() => {
-    console.log('here');
+    top.value = 0;
 
     return () => {
-      console.log('gone');
-      top.value = 0;
+      top.value = startingPosition;
     };
-  }, []);
+  });
 
   const gestureHandler = useAnimatedGestureHandler({
     onStart(_, context) {
-      context.startTop = props.active ? 240 : top.value;
+      context.startTop = top.value;
     },
     onActive(event, context) {
       top.value = context.startTop + event.translationY;

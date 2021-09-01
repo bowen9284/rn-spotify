@@ -68,9 +68,13 @@ function MyTabBar({ state, descriptors, navigation }) {
   const { colors } = useTheme();
   const [isSheetVisible, setisSheetVisible] = useState(false);
 
+  const handleBottomSheetDismiss = () => {
+    setisSheetVisible(false);
+  };
+
   return (
     <>
-      <TouchableOpacity onPress={() => setisSheetVisible(!isSheetVisible)}>
+      <TouchableOpacity onPress={() => setisSheetVisible(true)}>
         <View
           style={{
             flexDirection: 'row',

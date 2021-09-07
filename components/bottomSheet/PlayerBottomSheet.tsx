@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import { useWindowDimensions } from 'react-native';
@@ -8,7 +9,9 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  color,
 } from 'react-native-reanimated';
+import FullScreenPlayer from '../player/FullScreenPlayer';
 
 const SPRING_CONFIG = {
   damping: 80,
@@ -21,13 +24,14 @@ const SPRING_CONFIG = {
 interface Props {}
 
 const PlayerBottomSheet = (props: Props) => {
+  const { colors } = useTheme();
+
   const dimensions = useWindowDimensions();
   const top = useSharedValue(dimensions.height);
   const startingPosition = top.value;
 
   useEffect(() => {
     top.value = 0;
-
     return () => {
       top.value = startingPosition;
     };
@@ -44,7 +48,7 @@ const PlayerBottomSheet = (props: Props) => {
       if (top.value > dimensions.height / 2 + 200) {
         top.value = dimensions.height;
       } else {
-        top.value = dimensions.height / 2;
+        top.value = startingPosition;
       }
     },
   });
@@ -64,7 +68,7 @@ const PlayerBottomSheet = (props: Props) => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'white',
+            backgroundColor: colors.background,
             shadowColor: '#000',
             shadowOffset: {
               width: 0,
@@ -73,14 +77,13 @@ const PlayerBottomSheet = (props: Props) => {
             shadowOpacity: 0.25,
             shadowRadius: 4,
             elevation: 5,
-            padding: 20,
             justifyContent: 'center',
             alignItems: 'center',
           },
           animatedStyle,
         ]}
       >
-        <Text>SHEEEET</Text>
+        <FullScreenPlayer />
       </Animated.View>
     </PanGestureHandler>
   );

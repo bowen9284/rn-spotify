@@ -7,7 +7,7 @@ type Props = {
   id: string;
   images: SpotifyImage[];
   name: string;
-};
+}
 
 const RecentListenSquareTile = ({ id, images, name }: Props) => {
   const { colors } = useTheme();

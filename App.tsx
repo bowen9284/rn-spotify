@@ -5,12 +5,12 @@ import { AppearanceProvider } from 'react-native-appearance';
 import { SpotifyProvider } from './services/spotifyService';
 import AuthNavigator from './navigation/AuthNavigator';
 import * as SecureStore from 'expo-secure-store';
-import TabNavigator from './navigation/TabNavigator';
 import * as AuthSession from 'expo-auth-session';
 import { vars } from './env/env';
 import { AuthContext } from './context/authContext';
 import * as storageService from './services/secureStorageService';
 import { enableScreens } from 'react-native-screens';
+import TabNavigator from './navigation/TabNavigator';
 
 export default function App() {
 
@@ -178,7 +178,9 @@ export default function App() {
         <StatusBar barStyle="light-content" />
         <AuthContext.Provider value={authContext}>
           <SpotifyProvider>
-            {state.tokenResponse == null ? <AuthNavigator /> : <TabNavigator />}
+            {state.tokenResponse == null 
+              ? <AuthNavigator /> 
+              : <TabNavigator />}
           </SpotifyProvider>
         </AuthContext.Provider>
       </NavigationContainer>

@@ -9,5 +9,5 @@ type Props = {
 
 export const PrimaryText: React.FC<Props> = ({ children, style }) => {
   const { colors } = useTheme();
-  return <Text style={{ ...style, color: colors.text }}>{children}</Text>;
+  return <Text style={{ color: colors.text, ...style }}>{children}</Text>;
 };

@@ -8,9 +8,7 @@ import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, View, Text, Dimensions } from 'react-native';
-import { color, withSpring } from 'react-native-reanimated';
-import PlayerBottomSheet from '../components/bottomSheet/PlayerBottomSheet';
-
+import { createMyNavigator }from './CustomTabNavigator';
 export type TabParamList = {
   HomeStackNavigator: undefined;
   SearchStackNavigator: undefined;
@@ -18,7 +16,7 @@ export type TabParamList = {
   BottomSheet: undefined;
 };
 
-const Tab = createBottomTabNavigator<TabParamList>();
+const Tab = createMyNavigator()
 
 const TabNavigator: React.FC = () => {
   const { colors } = useTheme();
@@ -26,7 +24,6 @@ const TabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeStackNavigator"
-      tabBar={(props) => <MyTabBar {...props} />}
     >
       <Tab.Screen
         name="HomeStackNavigator"
@@ -66,15 +63,9 @@ export default TabNavigator;
 
 function MyTabBar({ state, descriptors, navigation }) {
   const { colors } = useTheme();
-  const [isSheetVisible, setisSheetVisible] = useState(false);
-
-  const handleBottomSheetDismiss = () => {
-    setisSheetVisible(false);
-  };
-
   return (
     <>
-      <TouchableOpacity onPress={() => setisSheetVisible(true)}>
+      <TouchableOpacity onPress={() => {}}>
         <View
           style={{
             flexDirection: 'row',
@@ -137,7 +128,6 @@ function MyTabBar({ state, descriptors, navigation }) {
           );
         })}
       </View>
-      {isSheetVisible && <PlayerBottomSheet />}
     </>
   );
 }

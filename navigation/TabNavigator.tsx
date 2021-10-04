@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import HomeStackNavigator from './HomeStackNavigator';
 import LibraryStackNavigator from './LibraryStackNavigator';
 import SearchStackNavigator from './SearchStackNavigator';
@@ -8,7 +8,12 @@ import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, View, Text, Dimensions } from 'react-native';
-import { createMyNavigator }from './CustomTabNavigator';
+import { createMyNavigator } from './CustomTabNavigator';
+import { SpotifyContext } from '../services/spotifyService';
+
+import { loadPlayer } from '../redux/features/player/playerSlice';
+import { useAppDispatch } from '../hooks';
+
 export type TabParamList = {
   HomeStackNavigator: undefined;
   SearchStackNavigator: undefined;
@@ -16,15 +21,29 @@ export type TabParamList = {
   BottomSheet: undefined;
 };
 
-const Tab = createMyNavigator()
+const Tab = createMyNavigator();
 
 const TabNavigator: React.FC = () => {
+  const spotifyService = useContext(SpotifyContext);
+
   const { colors } = useTheme();
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    let getCurrentlyPlaying = async () => {
+      let response = await spotifyService?.fetchCurrentyPlaying();
+      console.log('bad res bro', response)
+
+      if (response) {
+        console.log('resp bro', response)
+        dispatch(loadPlayer(response));
+      }
+    };
+    getCurrentlyPlaying();
+  }, []);
 
   return (
-    <Tab.Navigator
-      initialRouteName="HomeStackNavigator"
-    >
+    <Tab.Navigator initialRouteName="HomeStackNavigator">
       <Tab.Screen
         name="HomeStackNavigator"
         component={HomeStackNavigator}

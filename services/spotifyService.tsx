@@ -17,6 +17,7 @@ type SpotifyContextProps = {
   ) => Promise<RelatedArtistsResponse | undefined>;
   fetchIsFollowing: (playlistId: string) => Promise<[boolean] | undefined>;
   followPlaylist: (isFollowing: boolean, playlistId: string) => void;
+  fetchCurrentyPlaying: () => Promise<CurrentyPlayingResponse | undefined>;
 };
 
 type Props = {
@@ -24,9 +25,8 @@ type Props = {
 };
 
 // Exports
-export const SpotifyContext = createContext<SpotifyContextProps | undefined>(
-  undefined
-);
+export const SpotifyContext =
+  createContext<SpotifyContextProps | undefined>(undefined);
 
 export const useSpotifyApi = () => {
   return useContext(SpotifyContext);
@@ -45,6 +45,7 @@ export const SpotifyProvider: React.FC<Props> = ({ children }) => {
         fetchRelatedArtists,
         fetchIsFollowing,
         followPlaylist,
+        fetchCurrentyPlaying,
       }}
     >
       {children}
@@ -108,8 +109,14 @@ const fetchIsFollowing = async (playlistId: string) => {
   return response as [boolean];
 };
 
+const fetchCurrentyPlaying = async () => {
+  let response = await spotifyFetch(`/me/player/currently-playing`);
+  return response as CurrentyPlayingResponse;
+};
+
 const followPlaylist = async (isFollowing: boolean, playlistId: string) => {
-  let tokenResponse: AuthSession.TokenResponse = await storageService.getToken();
+  let tokenResponse: AuthSession.TokenResponse =
+    await storageService.getToken();
   if (!tokenResponse) return;
 
   let httpMethod = isFollowing ? 'DELETE' : 'PUT';

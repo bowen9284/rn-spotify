@@ -11,9 +11,10 @@ import { AuthContext } from './context/authContext';
 import * as storageService from './services/secureStorageService';
 import { enableScreens } from 'react-native-screens';
 import TabNavigator from './navigation/TabNavigator';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 export default function App() {
-
   const [state, dispatch] = useReducer(
     (prevState: any, action: any) => {
       switch (action.type) {
@@ -66,6 +67,7 @@ export default function App() {
     'playlist-read-private',
     'playlist-read-collaborative',
     'user-top-read',
+    'user-read-currently-playing',
   ];
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
@@ -138,7 +140,9 @@ export default function App() {
     );
   };
 
-  const refreshAccessToken = async (tokenResponse: AuthSession.TokenResponse) => {
+  const refreshAccessToken = async (
+    tokenResponse: AuthSession.TokenResponse
+  ) => {
     return AuthSession.refreshAsync(
       {
         refreshToken: tokenResponse.refreshToken,
@@ -173,18 +177,22 @@ export default function App() {
   enableScreens();
 
   return (
-    <AppearanceProvider>
-      <NavigationContainer theme={SpotifyTheme}>
-        <StatusBar barStyle="light-content" />
-        <AuthContext.Provider value={authContext}>
-          <SpotifyProvider>
-            {state.tokenResponse == null 
-              ? <AuthNavigator /> 
-              : <TabNavigator />}
-          </SpotifyProvider>
-        </AuthContext.Provider>
-      </NavigationContainer>
-    </AppearanceProvider>
+    <Provider store={store}>
+      <AppearanceProvider>
+        <NavigationContainer theme={SpotifyTheme}>
+          <StatusBar barStyle="light-content" />
+          <AuthContext.Provider value={authContext}>
+            <SpotifyProvider>
+              {state.tokenResponse == null ? (
+                <AuthNavigator />
+              ) : (
+                <TabNavigator />
+              )}
+            </SpotifyProvider>
+          </AuthContext.Provider>
+        </NavigationContainer>
+      </AppearanceProvider>
+    </Provider>
   );
 }
 

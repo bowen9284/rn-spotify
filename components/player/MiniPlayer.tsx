@@ -2,6 +2,9 @@ import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { color } from 'react-native-reanimated';
+import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../hooks';
+import { PlayerState } from '../../redux/features/player/playerSlice';
 import IsFollowedHeart from '../inputs/IsFollowedHeart';
 import { PrimaryText } from '../inputs/PrimaryText';
 
@@ -11,8 +14,9 @@ interface Props {
 
 const MiniPlayer = ({ isVisible }: Props) => {
   const { colors } = useTheme();
+  const playerInfo = useAppSelector((state) => state.player.playerInfo)
 
-  const TrackInfoScroller = () => <PrimaryText>Some Text Here</PrimaryText>;
+  const TrackInfoScroller = () => <PrimaryText>{playerInfo?.artist}</PrimaryText>;
 
   const ActiveListeningDevice = () => (
     <PrimaryText style={{ color: '#1DB954' }}>Some Device</PrimaryText>
@@ -26,9 +30,10 @@ const MiniPlayer = ({ isVisible }: Props) => {
       />
       <View>
         <TrackInfoScroller />
+        <PrimaryText>{playerInfo?.artist}</PrimaryText>
         <ActiveListeningDevice />
       </View>
-      <PrimaryText>Player</PrimaryText>
+      <PrimaryText>{playerInfo?.album}</PrimaryText>
       <IsFollowedHeart isFollowed={true} />
       <PrimaryText>Play/Pause</PrimaryText>
     </View>

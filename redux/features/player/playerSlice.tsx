@@ -1,11 +1,20 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface PlayerState {
-  playerInfo?: PlayerInfo | undefined
+  playerInfo: PlayerInfoState;
 }
 
 const initialState: PlayerState = {
-  playerInfo: undefined
+  playerInfo: {
+    isPlaying: false,
+    isFavorite: true,
+    artist: '',
+    album: '',
+    albumImage: undefined,
+    trackName: '',
+    trackDuration: 0,
+    trackProgress: 0,
+  },
 };
 
 export const playerSlice = createSlice({
@@ -13,13 +22,10 @@ export const playerSlice = createSlice({
   initialState,
   reducers: {
     loadPlayer: (state, action: PayloadAction<CurrentyPlayingResponse>) => {
-      if (state.playerInfo) {
-        state.playerInfo.trackName = action.payload.item.album.name;
-        state.playerInfo.artist = action.payload.item.artists[0].name;
-        state.playerInfo.albumImage = action.payload.item.album.images[0];
-        state.playerInfo.trackName = action.payload.item.name;
-      }
-  
+      const item = action.payload.item;
+      state.playerInfo.artist = item.artists[0].name;
+      state.playerInfo.albumImage = item.album.images[0];
+      state.playerInfo.trackName = item.name;
     },
     incrementTrackProgress: (state) => {
       state.playerInfo!.trackProgress += 1;

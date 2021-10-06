@@ -1,4 +1,4 @@
-interface PlayerInfo {
+interface PlayerInfoState {
     isPlaying: boolean;
     isFavorite: boolean;
     artist: string;

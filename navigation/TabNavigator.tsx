@@ -31,11 +31,8 @@ const TabNavigator: React.FC = () => {
 
   React.useEffect(() => {
     let getCurrentlyPlaying = async () => {
-      let response = await spotifyService?.fetchCurrentyPlaying();
-      console.log('bad res bro', response)
-
+      const response = await spotifyService?.fetchCurrentyPlaying();
       if (response) {
-        console.log('resp bro', response)
         dispatch(loadPlayer(response));
       }
     };

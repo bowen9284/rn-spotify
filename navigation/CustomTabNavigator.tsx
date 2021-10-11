@@ -27,7 +27,7 @@ function BottomTabNavigator({
 
   return (
     <>
-      <MiniPlayer isVisible={true}/>
+      <MiniPlayer />
       <BottomTabView
         {...rest}
         state={state}

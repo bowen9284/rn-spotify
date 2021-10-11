@@ -4,9 +4,11 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import PlaylistDetailScreen from '../screens/PlaylistDetailScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import RecentlyPlayedScreen from '../screens/HomeScreen/RecentlyPlayedScreen';
+import FullPlayerScreen from '../screens/FullPlayerScreen';
 
 export type HomeStackParamList = {
   HomeScreen: undefined;
+  FullPlayerScreen: undefined;
   PlaylistDetailScreen: { playlistId: string };
   SettingsScreen: undefined;
   RecentlyPlayedScreen: undefined;
@@ -47,6 +49,13 @@ const HomeStackNavigator: React.FC = () => {
         }}
         name="RecentlyPlayedScreen"
         component={RecentlyPlayedScreen}
+      />
+      <HomeStack.Screen
+        options={{
+          headerTransparent: true,
+        }}
+        name="FullPlayerScreen"
+        component={FullPlayerScreen}
       />
     </HomeStack.Navigator>
   );

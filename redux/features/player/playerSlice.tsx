@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface PlayerState {
   playerInfo: PlayerInfoState;
@@ -14,6 +14,7 @@ const initialState: PlayerState = {
     trackName: '',
     trackDuration: 0,
     trackProgress: 0,
+    miniPlayerIsVisible: false,
   },
 };
 
@@ -23,6 +24,7 @@ export const playerSlice = createSlice({
   reducers: {
     loadPlayer: (state, action: PayloadAction<CurrentyPlayingResponse>) => {
       const item = action.payload.item;
+      state.playerInfo.miniPlayerIsVisible = true;
       state.playerInfo.artist = item.artists[0].name;
       state.playerInfo.albumImage = item.album.images[0];
       state.playerInfo.trackName = item.name;
@@ -36,6 +38,10 @@ export const playerSlice = createSlice({
     toggleIsPlaying: (state) => {
       state.playerInfo!.isPlaying = !state.playerInfo!.isPlaying;
     },
+    toggleMiniPlayer: (state) => {
+      state.playerInfo!.miniPlayerIsVisible =
+        !state.playerInfo!.miniPlayerIsVisible;
+    },
   },
 });
 
@@ -43,6 +49,7 @@ export const {
   incrementTrackProgress,
   toggleIsFavorite,
   toggleIsPlaying,
+  toggleMiniPlayer,
   loadPlayer,
 } = playerSlice.actions;
 

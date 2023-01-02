@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { ActivityIndicator, StatusBar } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { AppearanceProvider } from 'react-native-appearance';
 import { SpotifyProvider } from './services/spotifyService';
 import AuthNavigator from './navigation/AuthNavigator';
 import * as SecureStore from 'expo-secure-store';
@@ -92,7 +91,7 @@ export default function App() {
         // check if token has expired and exchange.
         if (isTokenExpired(tokenResponse)) {
           console.log('expired');
-          let test = await refreshAccessToken(tokenResponse);
+          await refreshAccessToken(tokenResponse);
           return;
         }
 
@@ -178,20 +177,14 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <AppearanceProvider>
-        <NavigationContainer theme={SpotifyTheme}>
-          <StatusBar barStyle="light-content" />
-          <AuthContext.Provider value={authContext}>
-            <SpotifyProvider>
-              {state.tokenResponse == null ? (
-                <AuthNavigator />
-              ) : (
-                <TabNavigator />
-              )}
-            </SpotifyProvider>
-          </AuthContext.Provider>
-        </NavigationContainer>
-      </AppearanceProvider>
+      <NavigationContainer theme={SpotifyTheme}>
+        <StatusBar barStyle="light-content" />
+        <AuthContext.Provider value={authContext}>
+          <SpotifyProvider>
+            {state.tokenResponse == null ? <AuthNavigator /> : <TabNavigator />}
+          </SpotifyProvider>
+        </AuthContext.Provider>
+      </NavigationContainer>
     </Provider>
   );
 }

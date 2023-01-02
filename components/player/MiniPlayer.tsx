@@ -15,7 +15,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { HomeScreenNavigationProp } from '../../screens/HomeScreen/HomeScreen';
 import { toggleMiniPlayer } from '../../redux/features/player/playerSlice';
 import { AnimatePresence } from 'framer-motion';
-import { MotiView } from '@motify/components';
+import { MotiView } from 'moti';
 
 const MiniPlayer = () => {
   const { colors } = useTheme();
